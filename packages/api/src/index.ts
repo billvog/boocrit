@@ -31,8 +31,14 @@ import { User } from "./entity/User";
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
       resolvers: [UserResolver],
-      validate: false,
     }),
+    formatError: (error) => {
+      const validationError = error.extensions?.exception.validationErrors[0];
+      return {
+        path: validationError.property,
+        message: Object.values(validationError.constraints)[0],
+      } as any;
+    },
     plugins: [
       __prod__
         ? ApolloServerPluginLandingPageDisabled()
