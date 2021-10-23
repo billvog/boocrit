@@ -41,7 +41,10 @@ export class BookReviewResolver {
   async book(@Root() root: BookReview): Promise<Book> {
     try {
       const foundBook = await isbn.resolve(root.bookId);
-      return foundBook;
+      return {
+        ...foundBook,
+        industryIdentifiers: foundBook.industryIdentifiers as any,
+      };
     } catch {
       throw new Error("Book with this ISBN couldn't be found");
     }
