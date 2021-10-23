@@ -21,3 +21,14 @@ export class RegisterInput {
   @MinLength(6, { message: "Length must be greater than 6" })
   password: string;
 }
+
+@InputType()
+export class CredentialsInput {
+  @Field()
+  @IsEmail(undefined, { message: "Invalid email format" })
+  email: string;
+
+  @Field()
+  @MinLength(6, { message: "Length must be greater than 6" })
+  password: string;
+}
