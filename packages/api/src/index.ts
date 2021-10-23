@@ -1,22 +1,25 @@
-import "reflect-metadata";
-import express from "express";
-import { ApolloServer } from "apollo-server-express";
-import { buildSchema } from "type-graphql";
-import { UserResolver } from "./resolver/User";
 import {
   ApolloServerPluginLandingPageDisabled,
   ApolloServerPluginLandingPageGraphQLPlayground,
 } from "apollo-server-core";
-import { session_cookie, __prod__ } from "./contants";
-import { createConnection } from "typeorm";
-import path from "path";
-import { User } from "./entity/User";
-import session from "express-session";
+import { ApolloServer } from "apollo-server-express";
 import connectRedis from "connect-redis";
+import express from "express";
+import session from "express-session";
+import path from "path";
+import "reflect-metadata";
+import { buildSchema } from "type-graphql";
+import { createConnection } from "typeorm";
+import { session_cookie, __prod__ } from "./contants";
+import { BookReview } from "./entity/BookReview";
+import { User } from "./entity/User";
 import { MyRedisClient } from "./MyRedisClient";
+import { BookReviewResolver } from "./resolver/BookReview";
+import { UserResolver } from "./resolver/User";
 
 (async () => {
   const app = express();
+  app.disable("x-powered-by");
 
   const RedisStore = connectRedis(session);
   app.use(
@@ -39,7 +42,7 @@ import { MyRedisClient } from "./MyRedisClient";
     logging: !__prod__,
     synchronize: !__prod__,
     migrations: [path.join(__dirname, "./migration/*")],
-    entities: [User],
+    entities: [User, BookReview],
   });
 
   if (__prod__) {
@@ -48,7 +51,7 @@ import { MyRedisClient } from "./MyRedisClient";
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [UserResolver],
+      resolvers: [UserResolver, BookReviewResolver],
     }),
     formatError: (error) => {
       // Validation error

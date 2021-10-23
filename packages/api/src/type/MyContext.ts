@@ -8,5 +8,5 @@ export interface MyContext {
     };
   };
   res: Response;
-  me: User | null;
+  me: User;
 }

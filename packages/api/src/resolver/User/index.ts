@@ -24,9 +24,9 @@ export class UserResolver {
     return `${user.firstName} ${user.lastName}`;
   }
 
-  @Query(() => User, { nullable: true })
+  @Query(() => User)
   @UseMiddleware(isAuthenticated)
-  async Me(@Ctx() ctx: MyContext): Promise<User | null> {
+  async Me(@Ctx() ctx: MyContext): Promise<User> {
     return ctx.me;
   }
 
