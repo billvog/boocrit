@@ -9,6 +9,14 @@ class ImageListType {
 }
 
 @ObjectType()
+class IndustryIdentifiersType {
+  @Field()
+  type: string;
+  @Field()
+  identifier: string;
+}
+
+@ObjectType()
 export class Book {
   @Field(() => [String])
   authors: string[];
@@ -18,8 +26,8 @@ export class Book {
   description?: string;
   @Field(() => ImageListType, { nullable: true })
   imageLinks?: ImageListType | undefined;
-  @Field(() => [String])
-  industryIdentifiers: string[];
+  @Field(() => [IndustryIdentifiersType])
+  industryIdentifiers: IndustryIdentifiersType[];
   @Field()
   infoLink: string;
   @Field()

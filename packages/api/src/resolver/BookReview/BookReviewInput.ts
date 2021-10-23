@@ -9,8 +9,8 @@ export class CreateBookReviewInput {
 
   @Field()
   @IsNumber()
-  @Min(0, { message: "Rate can be between 0 and 10" })
-  @Max(10, { message: "Rate can be between 0 and 10" })
+  @Min(0, { message: "Rate can be between 0 and 5" })
+  @Max(5, { message: "Rate can be between 0 and 5" })
   rate: number;
 
   @Field()
