@@ -17,3 +17,10 @@ export class CreateBookReviewInput {
   @Length(3, 5000, { message: "Length must be between 3 and 5000" })
   body: string;
 }
+
+@InputType()
+export class BookReviewsByIsbnInput {
+  @Field()
+  @IsISBN("13", { message: "Given ISBN identifier is not valid" })
+  isbn: string;
+}

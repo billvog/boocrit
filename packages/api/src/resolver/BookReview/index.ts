@@ -1,37 +1,91 @@
 import isbn from "node-isbn";
-import { User } from "../../entity/User";
-import { Book } from "../../type/Book";
-import { MyContext } from "../../type/MyContext";
 import {
   Arg,
   Ctx,
   FieldResolver,
   Mutation,
+  Query,
   Resolver,
   Root,
   UseMiddleware,
 } from "type-graphql";
+import { getConnection } from "typeorm";
 import { BookReview } from "../../entity/BookReview";
+import { User } from "../../entity/User";
+import { Book } from "../../type/Book";
+import { MyContext } from "../../type/MyContext";
+import { PaginationInput } from "../PaginationInput";
 import { isAuthenticated } from "../User/isAuthMiddleware";
-import { CreateBookReviewInput } from "./BookReviewInput";
-import { BookReviewResponse } from "./BookReviewResponse";
+import {
+  BookReviewsByIsbnInput,
+  CreateBookReviewInput,
+} from "./BookReviewInput";
+import {
+  BookReviewResponse,
+  PaginatedBookReviewsResponse,
+} from "./BookReviewResponse";
 
 @Resolver(BookReview)
 export class BookReviewResolver {
   @FieldResolver(() => User)
   async reviewee(@Root() root: BookReview): Promise<User> {
     const user = await User.findOne(root.revieweeId);
-    return user!;
+    if (!user) {
+      throw new Error("Reviewee of this review couldn't be found");
+    }
+
+    return user;
   }
 
   @FieldResolver(() => Book)
   async book(@Root() root: BookReview): Promise<Book> {
-    const foundBook = await isbn.resolve(root.bookId);
-    if (!foundBook) {
+    try {
+      const foundBook = await isbn.resolve(root.bookId);
+      return foundBook;
+    } catch {
       throw new Error("Book with this ISBN couldn't be found");
     }
+  }
 
-    return foundBook;
+  @Query(() => PaginatedBookReviewsResponse)
+  async BookReviewsByISBN(
+    @Arg("input") input: BookReviewsByIsbnInput,
+    @Arg("pagination") pagination: PaginationInput
+  ): Promise<PaginatedBookReviewsResponse> {
+    // Check if book with that ISBN exists
+    try {
+      await isbn.resolve(input.isbn);
+    } catch {
+      return {
+        errors: [
+          {
+            path: "isbn",
+            message: "Given ISBN doesn't match to any book",
+          },
+        ],
+      };
+    }
+
+    const realLimit = Math.min(50, pagination.limit);
+    const realLimitPlusOne = realLimit + 1;
+
+    const qb = getConnection()
+      .getRepository(BookReview)
+      .createQueryBuilder("bookreview")
+      .orderBy('bookreview."createdAt"', "DESC")
+      .limit(realLimitPlusOne)
+      .where('bookreview."bookId" = :bookId', { bookId: input.isbn });
+
+    if (pagination.skip && pagination.skip > 0) {
+      qb.offset(pagination.skip);
+    }
+
+    const [bookReviews, count] = await qb.getManyAndCount();
+    return {
+      bookReviews: bookReviews.slice(0, realLimit),
+      hasMore: bookReviews.length === realLimitPlusOne,
+      count,
+    };
   }
 
   @Mutation(() => BookReviewResponse)
@@ -40,6 +94,20 @@ export class BookReviewResolver {
     @Arg("input") input: CreateBookReviewInput,
     @Ctx() ctx: MyContext
   ): Promise<BookReviewResponse> {
+    // Check if book with that ISBN exists
+    try {
+      await isbn.resolve(input.bookId);
+    } catch {
+      return {
+        errors: [
+          {
+            path: "isbn",
+            message: "Given ISBN doesn't match to any book",
+          },
+        ],
+      };
+    }
+
     // Check if a review has already been made from that user on that book
     if (
       await BookReview.findOne({
@@ -51,18 +119,6 @@ export class BookReviewResolver {
           {
             path: "bookId",
             message: "You have already reviewed that book",
-          },
-        ],
-      };
-    }
-
-    // Check if book with that isbn exists
-    if (!(await isbn.resolve(input.bookId))) {
-      return {
-        errors: [
-          {
-            path: "bookId",
-            message: "Can't find a book with the given ISBN",
           },
         ],
       };
