@@ -9,7 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@boocrit/controller": "0.0.1",
+    "formik": "^2.2.9",
     "next": "11.1.2",
+    "next-apollo": "^5.0.7",
+    "next-transpile-modules": "^9.0.0",
     "react": "17.0.2",
     "react-dom": "17.0.2"
   },

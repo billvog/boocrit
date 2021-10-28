@@ -2,7 +2,7 @@ import ButtonStyles from "../../styles/button.module.css";
 import React, { ButtonHTMLAttributes } from "react";
 
 const sizeClassnames = {
-  big: "py-2 px-8 text-base rounded-lg",
+  big: "py-2.5 px-8 text-base rounded-lg",
   medium: "py-2 px-6 text-sm rounded-md",
 };
 
@@ -39,7 +39,7 @@ export const MyButton: React.FC<MyButtonProps> = ({
       disabled={isLoading}
     >
       <span
-        className={`flex items-center leading-tight ${
+        className={`flex items-center leading-none ${
           isLoading ? "opacity-0" : ""
         }`}
       >

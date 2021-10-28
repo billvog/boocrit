@@ -5,6 +5,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
+        roboto: ['Roboto'],
         slab: ['Roboto Slab']
       },
       colors: {

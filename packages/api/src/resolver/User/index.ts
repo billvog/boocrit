@@ -19,6 +19,11 @@ import { session_cookie } from "../../contants";
 
 @Resolver(User)
 export class UserResolver {
+  @Query(() => String)
+  hello() {
+    return "Hello!";
+  }
+
   @FieldResolver()
   fullName(@Root() user: User) {
     return `${user.firstName} ${user.lastName}`;

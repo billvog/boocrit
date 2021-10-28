@@ -1,0 +1,31 @@
+{
+  "name": "@boocrit/controller",
+  "version": "0.0.1",
+  "description": "Client-side implementation of the Boocrit GraphQL api",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "gen": "graphql-codegen --config codegen.yml"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.4.16",
+    "@apollo/react-common": "^3.1.4",
+    "graphql": "^15.7.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "2.2.1",
+    "@types/graphql": "^14.5.0",
+    "@types/react": "^17.0.33",
+    "typescript": "^4.4.4",
+    "@graphql-codegen/typescript-operations": "2.1.8",
+    "@graphql-codegen/typescript": "2.2.4",
+    "@graphql-codegen/typescript-react-apollo": "3.1.6"
+  }
+}

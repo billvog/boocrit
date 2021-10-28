@@ -1,9 +1,11 @@
+require("dotenv-safe").config();
 import {
   ApolloServerPluginLandingPageDisabled,
   ApolloServerPluginLandingPageGraphQLPlayground,
 } from "apollo-server-core";
 import { ApolloServer } from "apollo-server-express";
 import connectRedis from "connect-redis";
+import cors from "cors";
 import express from "express";
 import session from "express-session";
 import path from "path";
@@ -20,13 +22,19 @@ import { UserResolver } from "./resolver/User";
 (async () => {
   const app = express();
   app.disable("x-powered-by");
+  app.use(
+    cors({
+      origin: process.env.FRONTEND_URL,
+      credentials: true,
+    })
+  );
 
   const RedisStore = connectRedis(session);
   app.use(
     session({
       store: new RedisStore({ client: MyRedisClient }),
       name: session_cookie,
-      secret: "a98s7d09as8ud9as8ud09238ed903j",
+      secret: process.env.SESSION_SECRET as string,
       saveUninitialized: false,
       resave: false,
       cookie: {
@@ -38,7 +46,7 @@ import { UserResolver } from "./resolver/User";
 
   const dbConnection = await createConnection({
     type: "postgres",
-    url: "postgres://postgres:postgres@localhost/boocrit",
+    url: process.env.DATABASE_URL,
     logging: !__prod__,
     synchronize: !__prod__,
     migrations: [path.join(__dirname, "./migration/*")],

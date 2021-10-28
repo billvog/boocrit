@@ -1,4 +1,12 @@
+# NPM
 node_modules
+
+# Build folder
 dist
+
+# Environment variables
+.env
+
+# Misc
 dump.rdb
 .DS_Store
