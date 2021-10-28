@@ -1,0 +1,25 @@
+.spinner {
+  border-radius: 50%;
+  border: 3.5px solid var(--color-accent-transparent);
+  border-top-color: var(--color-accent);
+  animation: spinner-loading 1s infinite ease;
+}
+
+.spinner.tiny {
+  width: 14px;
+  height: 14px;
+}
+
+.spinner.normal {
+  width: 26px;
+  height: 26px;
+}
+
+@keyframes spinner-loading {
+  from {
+    transform: rotate(0turn);
+  }
+  to {
+    transform: rotate(1turn);
+  }
+}

@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { Header } from "../ui/Header";
 import { MyButton } from "../ui/MyButton";
 
-export const LandingPage: React.FC = ({}) => {
+export const LandingView: React.FC = ({}) => {
   const router = useRouter();
   return (
     <>

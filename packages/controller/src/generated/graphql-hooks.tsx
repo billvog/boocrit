@@ -163,41 +163,114 @@ export type UserResponse = {
   user?: Maybe<User>;
 };
 
-export type HelloQueryVariables = Exact<{ [key: string]: never; }>;
+export type FieldErrorFragment = { __typename?: 'FieldError', path: string, message: string };
+
+export type UserFragment = { __typename?: 'User', id: string, fullName: string, firstName: string, lastName: string, email: string };
+
+export type UserResponseFragment = { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: string, fullName: string, firstName: string, lastName: string, email: string } | null | undefined };
+
+export type LoginUserMutationVariables = Exact<{
+  credentials: CredentialsInput;
+}>;
 
 
-export type HelloQuery = { __typename?: 'Query', hello: string };
+export type LoginUserMutation = { __typename?: 'Mutation', LoginUser: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: string, fullName: string, firstName: string, lastName: string, email: string } | null | undefined } };
+
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export const HelloDocument = gql`
-    query Hello {
-  hello
+export type MeQuery = { __typename?: 'Query', Me: { __typename?: 'User', id: string, fullName: string, firstName: string, lastName: string, email: string } };
+
+export const FieldErrorFragmentDoc = gql`
+    fragment FieldError on FieldError {
+  path
+  message
 }
     `;
+export const UserFragmentDoc = gql`
+    fragment User on User {
+  id
+  fullName
+  firstName
+  lastName
+  email
+}
+    `;
+export const UserResponseFragmentDoc = gql`
+    fragment UserResponse on UserResponse {
+  errors {
+    ...FieldError
+  }
+  user {
+    ...User
+  }
+}
+    ${FieldErrorFragmentDoc}
+${UserFragmentDoc}`;
+export const LoginUserDocument = gql`
+    mutation LoginUser($credentials: CredentialsInput!) {
+  LoginUser(credentials: $credentials) {
+    ...UserResponse
+  }
+}
+    ${UserResponseFragmentDoc}`;
+export type LoginUserMutationFn = Apollo.MutationFunction<LoginUserMutation, LoginUserMutationVariables>;
 
 /**
- * __useHelloQuery__
+ * __useLoginUserMutation__
  *
- * To run a query within a React component, call `useHelloQuery` and pass it any options that fit your needs.
- * When your component renders, `useHelloQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a mutation, you first call `useLoginUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLoginUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [loginUserMutation, { data, loading, error }] = useLoginUserMutation({
+ *   variables: {
+ *      credentials: // value for 'credentials'
+ *   },
+ * });
+ */
+export function useLoginUserMutation(baseOptions?: Apollo.MutationHookOptions<LoginUserMutation, LoginUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LoginUserMutation, LoginUserMutationVariables>(LoginUserDocument, options);
+      }
+export type LoginUserMutationHookResult = ReturnType<typeof useLoginUserMutation>;
+export type LoginUserMutationResult = Apollo.MutationResult<LoginUserMutation>;
+export type LoginUserMutationOptions = Apollo.BaseMutationOptions<LoginUserMutation, LoginUserMutationVariables>;
+export const MeDocument = gql`
+    query Me {
+  Me {
+    ...User
+  }
+}
+    ${UserFragmentDoc}`;
+
+/**
+ * __useMeQuery__
+ *
+ * To run a query within a React component, call `useMeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useHelloQuery({
+ * const { data, loading, error } = useMeQuery({
  *   variables: {
  *   },
  * });
  */
-export function useHelloQuery(baseOptions?: Apollo.QueryHookOptions<HelloQuery, HelloQueryVariables>) {
+export function useMeQuery(baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<HelloQuery, HelloQueryVariables>(HelloDocument, options);
+        return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, options);
       }
-export function useHelloLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HelloQuery, HelloQueryVariables>) {
+export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<HelloQuery, HelloQueryVariables>(HelloDocument, options);
+          return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options);
         }
-export type HelloQueryHookResult = ReturnType<typeof useHelloQuery>;
-export type HelloLazyQueryHookResult = ReturnType<typeof useHelloLazyQuery>;
-export type HelloQueryResult = Apollo.QueryResult<HelloQuery, HelloQueryVariables>;
+export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
+export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
+export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;

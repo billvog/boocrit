@@ -1,7 +1,7 @@
 import { useField } from "formik";
 import React, { InputHTMLAttributes } from "react";
 
-const InputUtils = `font-sans relative w-full outline-none border-none transition-colors ease-in-out duration-200 text-sm px-4 py-2.5 bg-primary-100 hover:bg-primary-200 focus:bg-primary-200 rounded-xl focus:ring-2 focus:ring-blue-600 disabled:opacity-50`;
+const InputUtils = `font-slab font-medium relative w-full outline-none border-none transition-colors ease-in-out duration-200 text-base text-accent-dark placeholder-accent-dark px-5 py-2.5 bg-accent-lightdark hover:bg-accent rounded-3xl disabled:opacity-50`;
 
 type InputFieldProps = InputHTMLAttributes<
   HTMLInputElement | HTMLTextAreaElement
@@ -27,9 +27,7 @@ export const InputField: React.FC<InputFieldProps> = ({
       )}
       {error && touched && (
         <div
-          className={`text-red-400 font-semibold mt-${
-            textarea ? "0.5" : "1"
-          } text-sm`}
+          className={`text-red-400 text-right font-slab font-medium mt-1 text-base`}
         >
           {error}
         </div>
