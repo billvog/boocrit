@@ -2,7 +2,7 @@ import SpinnerStyles from "../../styles/spinner.module.css";
 import React from "react";
 
 interface MySpinnerProps {
-  size?: "tiny" | "normal";
+  size?: "tiny" | "normal" | "big";
 }
 
 export const MySpinner: React.FC<MySpinnerProps> = ({ size = "normal" }) => {

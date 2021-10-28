@@ -45,7 +45,7 @@ export const WaitAuth: React.FC<WaitAuthProps> = ({
 
   return (
     <div className="w-screen h-screen">
-      {ok ? children : <MyCenterSpinner />}
+      {!ok ? children : <MyCenterSpinner />}
     </div>
   );
 };
