@@ -1,0 +1,3 @@
+fragment OkResponse on OkResponse {
+	ok
+}

@@ -1,0 +1,5 @@
+mutation RegisterUser1($options: RegisterInput1!) {
+  RegisterUser1(options: $options) {
+    ...OkResponse
+  }
+}
