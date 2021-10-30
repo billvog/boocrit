@@ -1,2 +1,2 @@
-import { LoginPage } from "../../modules/Login/LoginPage";
+import { LoginPage } from "../../modules/User/Login/LoginPage";
 export default LoginPage;
