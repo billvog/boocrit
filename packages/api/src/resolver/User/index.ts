@@ -23,6 +23,8 @@ import {
   RegisterInput4,
 } from "./UserInput";
 import { UserResponse } from "./UserResponse";
+import { createHash } from "crypto";
+import axios from "axios";
 
 @Resolver(User)
 export class UserResolver {
@@ -34,6 +36,17 @@ export class UserResolver {
   @FieldResolver()
   fullName(@Root() user: User) {
     return `${user.firstName} ${user.lastName}`;
+  }
+
+  @FieldResolver()
+  async profileImage(@Root() user: User) {
+    const md5 = createHash("md5").update("billvog04@gmail.com").digest("hex");
+    try {
+      const { data } = await axios.get(`https://en.gravatar.com/${md5}.json`);
+      return data.entry[0].thumbnailUrl;
+    } catch (error) {
+      return `https://avatars.dicebear.com/api/initials/${user.firstName} ${user.lastName}.svg`;
+    }
   }
 
   @Query(() => User)

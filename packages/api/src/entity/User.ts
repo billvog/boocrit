@@ -35,6 +35,9 @@ export class User extends BaseEntity {
   @Column()
   password: string;
 
+  @Field()
+  profileImage: string;
+
   @Field(() => [BookReview])
   @OneToMany(() => BookReview, (review) => review.reviewee)
   reviews: BookReview[];
