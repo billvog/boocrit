@@ -24,14 +24,14 @@ export class RegisterInput2 {
   email: string;
 
   @Field()
-  @Length(8, 8, { message: "Invalid format" })
+  @Length(6, 6, { message: "Invalid format" })
   code: string;
 }
 
 @InputType()
 export class RegisterInput4 extends RegisterInput1 {
   @Field()
-  @Length(8, 8, { message: "Invalid format" })
+  @Length(6, 6, { message: "Invalid format" })
   code: string;
 
   @Field()

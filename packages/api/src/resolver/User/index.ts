@@ -9,7 +9,7 @@ import {
   Root,
   UseMiddleware,
 } from "type-graphql";
-import uniqid from "uniqid";
+import { uid } from "uid";
 import { REDIS_REGISTER1_CODE, session_cookie } from "../../contants";
 import { User } from "../../entity/User";
 import { MyRedisClient as redis } from "../../MyRedisClient";
@@ -100,7 +100,7 @@ export class UserResolver {
   async RegisterUser1(
     @Arg("options") options: RegisterInput1
   ): Promise<OkResponse> {
-    const code = uniqid.time();
+    const code = uid(6);
 
     // For now log the code
     console.log(code);

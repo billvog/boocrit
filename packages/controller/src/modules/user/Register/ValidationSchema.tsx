@@ -1,7 +1,7 @@
 import * as yup from "yup";
 import { UserValidation } from "../Validation";
 
-const VerificationCode = yup.string().length(8);
+const VerificationCode = yup.string().length(6).label("Code");
 
 export const Register1ValidationSchema = yup.object().shape({
   firstName: UserValidation.FirstName.required(),

@@ -19,6 +19,7 @@ interface RegisterViewProps {
   submit: (values: RegisterFormValues) => Promise<ErrorMap | null>;
   goBack: () => void;
   phase: RegisterPhase;
+  formInitialValues: RegisterFormValues | undefined;
 }
 
 const C: React.FC<RegisterViewProps & FormikProps<RegisterFormValues>> = ({
@@ -32,7 +33,7 @@ const C: React.FC<RegisterViewProps & FormikProps<RegisterFormValues>> = ({
       <Form className="flex justify-center">
         <div
           className="py-24 space-y-3 flex flex-col items-end"
-          style={{ width: 300 }}
+          style={{ width: 324 }}
         >
           {phase == 1 ? (
             <Phase1 isSubmitting={isSubmitting} />
@@ -64,13 +65,14 @@ export const RegisterView = withFormik<RegisterViewProps, RegisterFormValues>({
         return null;
     }
   },
-  mapPropsToValues: () => ({
-    firstName: "",
-    lastName: "",
-    email: "",
-    code: "",
-    password: "",
-  }),
+  mapPropsToValues: ({ formInitialValues }) =>
+    formInitialValues || {
+      firstName: "",
+      lastName: "",
+      email: "",
+      code: "",
+      password: "",
+    },
   handleSubmit: async (values, { setErrors, props }) => {
     const errors = await props.submit(values);
     if (errors) setErrors(errors);

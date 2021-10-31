@@ -15,11 +15,11 @@ export const Phase2: React.FC<Phase2Props> = ({ isSubmitting, onBack }) => {
           Verify your email
         </h2>
         <div className="font-slab text-sm font-normal text-secondary">
-          a 6-digit code has been to the email you provided, please fill that
-          code here
+          a verification code has been to the email you provided, please fill
+          that code here
         </div>
       </div>
-      <InputField name="code" placeholder="6-Digit Code" type="text" />
+      <InputField name="code" placeholder="Verification code" type="text" />
       <div className="flex space-x-1">
         <MyButton type="button" onClick={onBack} color="brown">
           <span className="font-slab">Back</span>
