@@ -64,7 +64,7 @@ export const RegisterController: React.FC<RegisterControllerProps> = ({
 
       if (errors) {
         return toErrorMap(errors as any);
-      } else if (!data?.RegisterUser1) {
+      } else if (!data?.RegisterUser1.ok) {
         return {
           _: "Something went wrong",
         };
@@ -84,9 +84,9 @@ export const RegisterController: React.FC<RegisterControllerProps> = ({
 
       if (errors) {
         return toErrorMap(errors as any);
-      } else if (!data?.RegisterUser2) {
+      } else if (!data?.RegisterUser2.ok) {
         return {
-          _: "Something went wrong",
+          code: "Invalid code given",
         };
       }
 
@@ -116,19 +116,7 @@ export const RegisterController: React.FC<RegisterControllerProps> = ({
   };
 
   const goBack = () => {
-    switch (phase) {
-      case 2:
-        setPhase(1);
-        break;
-      case 3:
-        setPhase(1);
-        break;
-      case 4:
-        setPhase(1);
-        break;
-      default:
-        break;
-    }
+    setPhase(1);
   };
 
   return children({
