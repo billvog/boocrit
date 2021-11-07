@@ -32,7 +32,7 @@ export const Topbar: React.FC<TopbarProps> = ({}) => {
             <div className="divide-y-2 divide-accent-semidark">
               <div className="text-accent-darkest font-medium text-sm px-4 py-2.5">
                 Logged in as{" "}
-                <span className="font-bold font-slab">{me.fullName}</span>
+                <span className="font-black font-slab">{me.uid}</span>
               </div>
               <div className="p-1 space-y-0.5">
                 <PopoverItem text="My account" onClick={() => {}} />

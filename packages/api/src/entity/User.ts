@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   Entity,
   OneToMany,
+  PrimaryColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
@@ -16,6 +17,10 @@ export class User extends BaseEntity {
   @Field()
   @PrimaryGeneratedColumn("uuid")
   id: string;
+
+  @Field()
+  @PrimaryColumn({ unique: true })
+  uid: string;
 
   @Field()
   @Column()

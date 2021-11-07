@@ -5,18 +5,18 @@ import { MiddlewareFn } from "type-graphql";
 const NotAuthenticatedError = "You must be authenticated to access that path";
 
 export const isAuthenticated: MiddlewareFn<MyContext> = async (
-  { context },
+  { context: ctx },
   next
 ) => {
-  if (!context.req.session.userId) {
+  if (!ctx.req.session.userId) {
     throw new Error(NotAuthenticatedError);
   }
 
-  const me = await User.findOne(context.req.session.userId);
+  const me = await User.findOne({ where: { id: ctx.req.session.userId } });
   if (!me) {
     throw new Error(NotAuthenticatedError);
   }
 
-  context.me = me;
+  ctx.me = me;
   return next();
 };

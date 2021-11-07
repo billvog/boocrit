@@ -154,6 +154,7 @@ export type RegisterInput1 = {
   email: Scalars['String'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
+  uid: Scalars['String'];
 };
 
 export type RegisterInput2 = {
@@ -167,6 +168,7 @@ export type RegisterInput4 = {
   firstName: Scalars['String'];
   lastName: Scalars['String'];
   password: Scalars['String'];
+  uid: Scalars['String'];
 };
 
 export type User = {
@@ -179,6 +181,7 @@ export type User = {
   lastName: Scalars['String'];
   profileImage: Scalars['String'];
   reviews: Array<BookReview>;
+  uid: Scalars['String'];
   updatedAt: Scalars['DateTime'];
 };
 
@@ -192,16 +195,16 @@ export type FieldErrorFragment = { __typename?: 'FieldError', path: string, mess
 
 export type OkResponseFragment = { __typename?: 'OkResponse', ok: boolean };
 
-export type UserFragment = { __typename?: 'User', id: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string };
+export type UserFragment = { __typename?: 'User', id: string, uid: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string };
 
-export type UserResponseFragment = { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string } | null | undefined };
+export type UserResponseFragment = { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: string, uid: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string } | null | undefined };
 
 export type LoginUserMutationVariables = Exact<{
   credentials: CredentialsInput;
 }>;
 
 
-export type LoginUserMutation = { __typename?: 'Mutation', LoginUser: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string } | null | undefined } };
+export type LoginUserMutation = { __typename?: 'Mutation', LoginUser: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: string, uid: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string } | null | undefined } };
 
 export type RegisterUser1MutationVariables = Exact<{
   options: RegisterInput1;
@@ -222,12 +225,12 @@ export type RegisterUser4MutationVariables = Exact<{
 }>;
 
 
-export type RegisterUser4Mutation = { __typename?: 'Mutation', RegisterUser4: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string } | null | undefined } };
+export type RegisterUser4Mutation = { __typename?: 'Mutation', RegisterUser4: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: string, uid: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string } | null | undefined } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', Me: { __typename?: 'User', id: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string } };
+export type MeQuery = { __typename?: 'Query', Me: { __typename?: 'User', id: string, uid: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string } };
 
 export const OkResponseFragmentDoc = gql`
     fragment OkResponse on OkResponse {
@@ -243,6 +246,7 @@ export const FieldErrorFragmentDoc = gql`
 export const UserFragmentDoc = gql`
     fragment User on User {
   id
+  uid
   fullName
   firstName
   lastName

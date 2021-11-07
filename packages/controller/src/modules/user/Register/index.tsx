@@ -19,6 +19,7 @@ export interface SavedRegisterState {
 
 export type RegisterPhase = 1 | 2 | 3 | 4;
 export interface RegisterFormValues {
+  uid: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -100,6 +101,7 @@ export const RegisterController: React.FC<RegisterControllerProps> = ({
       const { data, errors } = await register1({
         variables: {
           options: {
+            uid: values.uid,
             firstName: values.firstName,
             lastName: values.lastName,
             email: values.email,

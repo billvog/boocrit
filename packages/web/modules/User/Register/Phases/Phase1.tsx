@@ -18,6 +18,7 @@ export const Phase1: React.FC<Phase1Props> = ({ isSubmitting }) => {
           fill in your first name, last name and your email to continue
         </div>
       </div>
+      <InputField name="uid" placeholder="UID" type="text" />
       <InputField name="firstName" placeholder="First name" type="text" />
       <InputField name="lastName" placeholder="Last name" type="text" />
       <InputField name="email" placeholder="Email" type="email" />

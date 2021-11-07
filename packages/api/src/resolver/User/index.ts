@@ -184,6 +184,7 @@ export class UserResolver {
     const hashedPassword = await argon2.hash(options.password);
 
     const user = await User.create({
+      uid: stored_user.uid,
       firstName: options.firstName,
       lastName: options.lastName,
       email: stored_user.email,

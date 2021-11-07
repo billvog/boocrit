@@ -67,6 +67,7 @@ export const RegisterView = withFormik<RegisterViewProps, RegisterFormValues>({
   },
   mapPropsToValues: ({ formInitialValues }) =>
     formInitialValues || {
+      uid: "",
       firstName: "",
       lastName: "",
       email: "",

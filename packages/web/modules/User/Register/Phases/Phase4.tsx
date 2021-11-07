@@ -19,9 +19,10 @@ export const Phase4: React.FC<Phase4Props> = ({ isSubmitting, onBack }) => {
           check if everything is correct and finish the register process
         </div>
       </div>
+      <InputField name="uid" placeholder="UID" type="text" />
       <InputField name="firstName" placeholder="First name" type="text" />
       <InputField name="lastName" placeholder="Last name" type="text" />
-      <InputField name="email" placeholder="Email" type="email" />
+      <InputField name="email" placeholder="Email" type="email" disabled />
       <InputField name="password" placeholder="Password" type="password" />
       <div className="flex space-x-1">
         <MyButton type="button" onClick={onBack} color="brown">

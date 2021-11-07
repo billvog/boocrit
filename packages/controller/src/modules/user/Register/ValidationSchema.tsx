@@ -4,6 +4,7 @@ import { UserValidation } from "../Validation";
 const VerificationCode = yup.string().length(6).label("Code");
 
 export const Register1ValidationSchema = yup.object().shape({
+  uid: UserValidation.UID.required(),
   firstName: UserValidation.FirstName.required(),
   lastName: UserValidation.LastName.required(),
   email: UserValidation.Email.required(),
@@ -19,6 +20,7 @@ export const Register3ValidationSchema = yup.object().shape({
 });
 
 export const Register4ValidationSchema = yup.object().shape({
+  uid: UserValidation.UID.required(),
   firstName: UserValidation.FirstName.required(),
   lastName: UserValidation.LastName.required(),
   password: UserValidation.Password.required(),
