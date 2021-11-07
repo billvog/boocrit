@@ -8,10 +8,10 @@ const sizeClassnames = {
 
 const colorClassnames = {
   primary:
-    "bg-secondary text-primary hover:bg-secondary-hover disabled:text-primary-200 disabled:bg-secondary-hover",
+    "bg-secondary text-primary-50 hover:bg-secondary-hover disabled:text-primary-200 disabled:bg-secondary-hover",
   accent: "bg-accent-lightdark text-secondary hover:bg-accent",
-  green: "bg-green text-primary hover:bg-green-hover",
-  brown: "bg-brown text-primary hover:bg-brown-hover",
+  green: "bg-green text-primary-50 hover:bg-green-hover",
+  brown: "bg-brown text-primary-50 hover:bg-brown-hover",
 };
 
 type MyButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {

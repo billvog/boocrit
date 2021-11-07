@@ -9,15 +9,17 @@ module.exports = {
         slab: ['Roboto Slab']
       },
       colors: {
-        primary: colors.white,
+        primary: colors.gray,
         secondary: {
           DEFAULT: '#282B28',
           hover: '#3D423D'
         },
         accent: {
           dark: '#C9C79C',
+          darkest: '#949476',
           DEFAULT: '#FFFCC3',
-          lightdark: '#FCF9C1'
+          lightdark: '#FCF9C1',
+          semidark: '#F6F3B6'
         },
         green: {
           dark: '#567469',

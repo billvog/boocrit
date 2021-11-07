@@ -14,7 +14,7 @@ export const LandingView: React.FC = ({}) => {
           <div
             className="text-center flex justify-center items-center"
             style={{
-              backgroundImage: "url(assets/landing_welcome_vector.svg)",
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='815' height='425' viewBox='0 0 815 425' fill='none' xmlns='http://www.w3.org/2000/svg'%0A%3E%3Cpath d='M26.3039 167.197C100.604 -20.7956 245.807 -12.7792 309.121 14.7281C303.069 12.5339 307.724 14.492 374.762 39.8777C458.56 71.6097 587.049 3.72517 638.026 1.3674C678.808 -0.518813 721.591 17.8718 737.885 27.3029C796.078 76.2921 877.548 201.621 737.885 311.021C563.307 447.772 629.646 246.576 362.891 369.966C96.1352 493.356 -66.5718 402.188 26.3039 167.197Z' fill='%239DE6CD' /%3E%3C/svg%3E")`,
               backgroundRepeat: "no-repeat",
               width: "815px",
               height: "425px",
@@ -24,7 +24,7 @@ export const LandingView: React.FC = ({}) => {
               <h1 className="font-black font-roboto text-secondary text-5xl">
                 Welcome to <span className="font-slab">Boocrit</span>!
               </h1>
-              <p className="font-normal font-slab text-secondary text-xl">
+              <p className="font-medium font-slab text-secondary text-xl">
                 The online book community.
               </p>
               <div className="flex justify-center items-center space-x-3 pt-6">

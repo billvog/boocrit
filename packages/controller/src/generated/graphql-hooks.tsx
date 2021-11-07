@@ -177,6 +177,7 @@ export type User = {
   fullName: Scalars['String'];
   id: Scalars['String'];
   lastName: Scalars['String'];
+  profileImage: Scalars['String'];
   reviews: Array<BookReview>;
   updatedAt: Scalars['DateTime'];
 };
@@ -191,16 +192,16 @@ export type FieldErrorFragment = { __typename?: 'FieldError', path: string, mess
 
 export type OkResponseFragment = { __typename?: 'OkResponse', ok: boolean };
 
-export type UserFragment = { __typename?: 'User', id: string, fullName: string, firstName: string, lastName: string, email: string };
+export type UserFragment = { __typename?: 'User', id: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string };
 
-export type UserResponseFragment = { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: string, fullName: string, firstName: string, lastName: string, email: string } | null | undefined };
+export type UserResponseFragment = { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string } | null | undefined };
 
 export type LoginUserMutationVariables = Exact<{
   credentials: CredentialsInput;
 }>;
 
 
-export type LoginUserMutation = { __typename?: 'Mutation', LoginUser: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: string, fullName: string, firstName: string, lastName: string, email: string } | null | undefined } };
+export type LoginUserMutation = { __typename?: 'Mutation', LoginUser: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string } | null | undefined } };
 
 export type RegisterUser1MutationVariables = Exact<{
   options: RegisterInput1;
@@ -221,12 +222,12 @@ export type RegisterUser4MutationVariables = Exact<{
 }>;
 
 
-export type RegisterUser4Mutation = { __typename?: 'Mutation', RegisterUser4: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: string, fullName: string, firstName: string, lastName: string, email: string } | null | undefined } };
+export type RegisterUser4Mutation = { __typename?: 'Mutation', RegisterUser4: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string } | null | undefined } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', Me: { __typename?: 'User', id: string, fullName: string, firstName: string, lastName: string, email: string } };
+export type MeQuery = { __typename?: 'Query', Me: { __typename?: 'User', id: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string } };
 
 export const OkResponseFragmentDoc = gql`
     fragment OkResponse on OkResponse {
@@ -246,6 +247,7 @@ export const UserFragmentDoc = gql`
   firstName
   lastName
   email
+  profileImage
 }
     `;
 export const UserResponseFragmentDoc = gql`
