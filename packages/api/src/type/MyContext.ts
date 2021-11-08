@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { MyMailer } from "../utils/Mailer";
 import { User } from "../entity/User";
 
 export interface MyContext {
@@ -9,4 +10,5 @@ export interface MyContext {
   };
   res: Response;
   me: User;
+  mailer: MyMailer;
 }

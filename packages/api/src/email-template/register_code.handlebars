@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<style>
+		body {
+			color: #282B28;
+		}
+
+		span.code {
+			font-family: monospace;
+			font-weight: bold;
+			padding: 4px 8px;
+			border-radius: 12px;
+			background: #282B28;
+			color: #FFFCC3;
+			width: fit-content;
+		}
+	</style>
+</head>
+<body>
+	<h1>
+		Hello {{firstName}},
+	</h1>
+	<div>
+		<p>Someone just used your email to create an account at Boocrit. Was it you?</p>
+		<p>
+			If yes, copy the following code and paste it to the code field.
+			<span class="code">
+				{{code}}
+			</span>
+		</p>
+		<p>
+			If no, just ignore me.️
+		</p>
+	</div>
+</body>
+</html>

@@ -18,6 +18,7 @@ import { User } from "./entity/User";
 import { MyRedisClient } from "./MyRedisClient";
 import { BookReviewResolver } from "./resolver/BookReview";
 import { UserResolver } from "./resolver/User";
+import { ConfigureMailer } from "./utils/Mailer";
 
 (async () => {
   const app = express();
@@ -57,6 +58,9 @@ import { UserResolver } from "./resolver/User";
     await dbConnection.runMigrations();
   }
 
+  // Configure mailer
+  const mailer = ConfigureMailer();
+
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
       resolvers: [UserResolver, BookReviewResolver],
@@ -81,6 +85,7 @@ import { UserResolver } from "./resolver/User";
     context: ({ req, res }) => ({
       req,
       res,
+      mailer,
     }),
   });
 

@@ -40,7 +40,7 @@ export class UserResolver {
 
   @FieldResolver()
   async profileImage(@Root() user: User) {
-    const md5 = createHash("md5").update("billvog04@gmail.com").digest("hex");
+    const md5 = createHash("md5").update(user.email).digest("hex");
     try {
       const { data } = await axios.get(`https://en.gravatar.com/${md5}.json`);
       return data.entry[0].thumbnailUrl;
@@ -111,12 +111,21 @@ export class UserResolver {
 
   @Mutation(() => OkResponse)
   async RegisterUser1(
-    @Arg("options") options: RegisterInput1
+    @Arg("options") options: RegisterInput1,
+    @Ctx() ctx: MyContext
   ): Promise<OkResponse> {
     const code = uid(6);
 
-    // For now log the code
-    console.log(code);
+    // Send code with email
+    ctx.mailer.SendMail({
+      to: options.email,
+      subject: "Your code has arrived!",
+      template: "register_code",
+      context: {
+        firstName: options.firstName,
+        code,
+      },
+    });
 
     const user = {
       ...options,

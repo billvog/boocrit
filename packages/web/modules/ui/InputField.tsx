@@ -1,7 +1,7 @@
 import { useField } from "formik";
 import React, { InputHTMLAttributes } from "react";
 
-const InputUtils = `font-slab font-medium relative w-full outline-none border-none transition-colors ease-in-out duration-200 text-base text-accent-dark placeholder-accent-dark px-5 py-2.5 bg-accent-lightdark hover:bg-accent rounded-3xl disabled:opacity-50`;
+const InputUtils = `font-slab font-medium relative w-full outline-none border-none transition-colors ease-in-out duration-200 text-base text-accent-darkest placeholder-accent-dark px-5 py-2.5 bg-accent-lightdark hover:bg-accent rounded-3xl disabled:text-accent-dark`;
 
 type InputFieldProps = InputHTMLAttributes<
   HTMLInputElement | HTMLTextAreaElement
