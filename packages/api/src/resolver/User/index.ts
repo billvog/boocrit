@@ -49,10 +49,10 @@ export class UserResolver {
     }
   }
 
-  @Query(() => User)
-  @UseMiddleware(isAuthenticated)
-  async Me(@Ctx() ctx: MyContext): Promise<User> {
-    return ctx.me;
+  @Query(() => User, { nullable: true })
+  async Me(@Ctx() ctx: MyContext): Promise<User | undefined> {
+    const me = await User.findOne({ where: { id: ctx.req.session.userId } });
+    return me;
   }
 
   @Mutation(() => OkResponse)

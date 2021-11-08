@@ -18,6 +18,7 @@ export const Sidebar: React.FC<SidebarProps> = ({}) => {
       />
       <div className="flex flex-col space-y-1.5">
         <SidebarItem text="Home" route="/app" />
+        <SidebarItem text="Review" route="/app/review" />
       </div>
     </div>
   );
@@ -30,9 +31,13 @@ interface SidebarItemProps {
 
 const SidebarItem: React.FC<SidebarItemProps> = ({ text, route }) => {
   const router = useRouter();
+  const isActive = router.pathname === route;
   return (
     <div
-      className="bg-accent-semidark hover:bg-accent-lightdark text-accent-darkest px-6 py-3 font-slab font-bold text-lg transition-colors cursor-pointer"
+      className={`bg-accent-semidark hover:bg-accent-lightdark text-accent-darkest px-6 py-3 font-slab font-bold text-lg transition-colors cursor-pointer`}
+      style={{
+        textDecoration: isActive ? "underline 2px" : "none",
+      }}
       onClick={() => router.push(route)}
     >
       {text}

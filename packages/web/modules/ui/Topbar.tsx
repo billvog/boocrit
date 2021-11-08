@@ -1,13 +1,20 @@
+import { useLogoutUserMutation } from "@boocrit/controller";
 import { Popover } from "@headlessui/react";
 import React, { useContext } from "react";
 import { GoChevronDown } from "react-icons/go";
 import { AuthContext } from "../Auth/AuthProvider";
+import { useApolloClient } from "@apollo/client";
+import router from "next/router";
+import { toast } from "react-toastify";
 
 interface TopbarProps {}
 
 export const Topbar: React.FC<TopbarProps> = ({}) => {
   const { me } = useContext(AuthContext);
   if (!me) return null;
+
+  const [logoutUser] = useLogoutUserMutation({ errorPolicy: "all" });
+  const apolloClient = useApolloClient();
 
   return (
     <div className="w-full bg-primary-50 flex items-center justify-between p-3">
@@ -20,7 +27,7 @@ export const Topbar: React.FC<TopbarProps> = ({}) => {
                 src={me.profileImage}
                 className="cursor-pointer rounded-full w-10 h-10 select-none"
               />
-              <div className="absolute -bottom-1 -left-1 bg-accent text-accent-darkest rounded-full p-0.5">
+              <div className="absolute -bottom-1 -left-1 bg-accent text-accent-darkest rounded-full p-0.5 ring-2 ring-primary-50">
                 <GoChevronDown size={14} />
               </div>
             </div>
@@ -36,7 +43,28 @@ export const Topbar: React.FC<TopbarProps> = ({}) => {
               </div>
               <div className="p-1 space-y-0.5">
                 <PopoverItem text="My account" onClick={() => {}} />
-                <PopoverItem text="Logout" onClick={() => {}} />
+                <PopoverItem
+                  text="Logout"
+                  onClick={() => {
+                    toast.promise(
+                      new Promise(async (res, rej) => {
+                        const { data } = await logoutUser();
+                        if (!data?.LogoutUser.ok) {
+                          return rej();
+                        }
+
+                        await apolloClient.resetStore();
+                        router.replace("/");
+                        res(true);
+                      }),
+                      {
+                        pending: "Please wait...",
+                        error: "Something went wrong",
+                        success: "Successfuly logged out",
+                      }
+                    );
+                  }}
+                />
               </div>
             </div>
           </Popover.Panel>
