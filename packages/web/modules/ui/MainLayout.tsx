@@ -10,7 +10,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       <Sidebar />
       <div className="flex-1 flex flex-col">
         <Topbar />
-        <div className="flex-1">{children}</div>
+        <div className="flex-1 mt-20 font-roboto">{children}</div>
       </div>
     </div>
   );
