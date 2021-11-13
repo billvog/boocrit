@@ -60,8 +60,10 @@ export const ConfigureMailer = (): MyMailer => {
       viewEngine: {
         layoutsDir: "./src/email-template",
         defaultLayout: undefined,
+        extname: ".hbs",
       },
       viewPath: "./src/email-template",
+      extName: ".hbs",
     })
   );
 

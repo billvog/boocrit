@@ -10,9 +10,10 @@ import {
   UseMiddleware,
 } from "type-graphql";
 import { getConnection } from "typeorm";
+import { Book } from "../../entity/Book";
 import { BookReview } from "../../entity/BookReview";
 import { User } from "../../entity/User";
-import { Book } from "../../type/Book";
+import { BookType } from "../../type/BookType";
 import { MyContext } from "../../type/MyContext";
 import { PaginationInput } from "../PaginationInput";
 import { isAuthenticated } from "../User/isAuthMiddleware";
@@ -40,13 +41,14 @@ export class BookReviewResolver {
   @FieldResolver(() => Book)
   async book(@Root() root: BookReview): Promise<Book> {
     try {
-      const foundBook = await isbn.resolve(root.bookId);
-      return {
-        ...foundBook,
-        industryIdentifiers: foundBook.industryIdentifiers as any,
-      };
+      const book = await Book.findOne(root.bookId);
+      if (!book) {
+        throw new Error();
+      }
+
+      return book;
     } catch {
-      throw new Error("Book with this ISBN couldn't be found");
+      throw new Error("Book couldn't be found");
     }
   }
 
@@ -56,14 +58,13 @@ export class BookReviewResolver {
     @Arg("pagination") pagination: PaginationInput
   ): Promise<PaginatedBookReviewsResponse> {
     // Check if book with that ISBN exists
-    try {
-      await isbn.resolve(input.isbn);
-    } catch {
+    const book = await Book.findOne(input.isbn);
+    if (!book) {
       return {
         errors: [
           {
             path: "isbn",
-            message: "Given ISBN doesn't match to any book",
+            message: "Book with ISBN couldn't be found",
           },
         ],
       };
@@ -98,8 +99,9 @@ export class BookReviewResolver {
     @Ctx() ctx: MyContext
   ): Promise<BookReviewResponse> {
     // Check if book with that ISBN exists
+    let fetchedBook: BookType;
     try {
-      await isbn.resolve(input.bookId);
+      fetchedBook = await isbn.resolve(input.bookId);
     } catch {
       return {
         errors: [
@@ -111,10 +113,38 @@ export class BookReviewResolver {
       };
     }
 
+    // Insert book into database
+    let book = await Book.findOne(input.bookId);
+    if (!book) {
+      try {
+        book = await Book.create({
+          id: fetchedBook.industryIdentifiers[0],
+          title: fetchedBook.title,
+          description: fetchedBook.description,
+          publisher: fetchedBook.publisher,
+          language: fetchedBook.language,
+          pageCount: fetchedBook.pageCount,
+          publishedDate: fetchedBook.publishedDate,
+          categories: fetchedBook.categories,
+          smallThumbnail: fetchedBook.imageLinks?.smallThumbnail,
+          thumbnail: fetchedBook.imageLinks?.thumbnail,
+        }).save();
+      } catch {
+        return {
+          errors: [
+            {
+              path: "_",
+              message: "Couldn't create book",
+            },
+          ],
+        };
+      }
+    }
+
     // Check if a review has already been made from that user on that book
     if (
       await BookReview.findOne({
-        where: { revieweeId: ctx.me.id, bookId: input.bookId },
+        where: { revieweeId: ctx.me.id, bookId: book.id },
       })
     ) {
       return {

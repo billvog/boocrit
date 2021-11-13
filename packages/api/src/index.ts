@@ -13,6 +13,7 @@ import "reflect-metadata";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
 import { session_cookie, __prod__ } from "./contants";
+import { Book } from "./entity/Book";
 import { BookReview } from "./entity/BookReview";
 import { User } from "./entity/User";
 import { MyRedisClient } from "./MyRedisClient";
@@ -51,7 +52,7 @@ import { ConfigureMailer } from "./utils/Mailer";
     logging: !__prod__,
     synchronize: !__prod__,
     migrations: [path.join(__dirname, "./migration/*")],
-    entities: [User, BookReview],
+    entities: [User, Book, BookReview],
   });
 
   if (__prod__) {

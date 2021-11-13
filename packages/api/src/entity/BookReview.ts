@@ -1,4 +1,3 @@
-import { Book } from "../type/Book";
 import { Field, Float, ObjectType } from "type-graphql";
 import {
   BaseEntity,
@@ -9,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { Book } from "./Book";
 import { User } from "./User";
 
 @ObjectType()
