@@ -1,5 +1,5 @@
 import { Book } from "../../entity/Book";
-import { Arg, FieldResolver, Query, Resolver, Root } from "type-graphql";
+import { Arg, FieldResolver, Float, Query, Resolver, Root } from "type-graphql";
 import { PaginationInput } from "../PaginationInput";
 import { PaginatedBooksResponse } from "./BookResponse";
 import { getConnection } from "typeorm";
@@ -7,8 +7,8 @@ import { BookReview } from "../../entity/BookReview";
 
 @Resolver(Book)
 export class BookResolver {
-  @FieldResolver()
-  async avgRage(@Root() book: Book) {
+  @FieldResolver(() => Float)
+  async avgRate(@Root() book: Book) {
     const qb = getConnection()
       .getRepository(BookReview)
       .createQueryBuilder("bookreview")
@@ -17,9 +17,12 @@ export class BookResolver {
 
     const [reviews, count] = await qb.getManyAndCount();
 
+    if (count <= 0) return -1;
+
     let rateSum = 0;
     reviews.map((r) => (rateSum += r.rate));
-    return rateSum / count;
+
+    return (rateSum / count).toFixed(1);
   }
 
   @Query(() => PaginatedBooksResponse)

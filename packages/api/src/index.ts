@@ -17,6 +17,7 @@ import { Book } from "./entity/Book";
 import { BookReview } from "./entity/BookReview";
 import { User } from "./entity/User";
 import { MyRedisClient } from "./MyRedisClient";
+import { BookResolver } from "./resolver/Book";
 import { BookReviewResolver } from "./resolver/BookReview";
 import { UserResolver } from "./resolver/User";
 import { ConfigureMailer } from "./utils/Mailer";
@@ -64,7 +65,7 @@ import { ConfigureMailer } from "./utils/Mailer";
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [UserResolver, BookReviewResolver],
+      resolvers: [UserResolver, BookResolver, BookReviewResolver],
     }),
     formatError: (error) => {
       // Validation error

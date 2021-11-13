@@ -30,7 +30,7 @@ import {
 export class BookReviewResolver {
   @FieldResolver(() => User)
   async reviewee(@Root() root: BookReview): Promise<User> {
-    const user = await User.findOne(root.revieweeId);
+    const user = await User.findOne({ where: { id: root.revieweeId } });
     if (!user) {
       throw new Error("Reviewee of this review couldn't be found");
     }
@@ -98,27 +98,43 @@ export class BookReviewResolver {
     @Arg("input") input: CreateBookReviewInput,
     @Ctx() ctx: MyContext
   ): Promise<BookReviewResponse> {
-    // Check if book with that ISBN exists
-    let fetchedBook: BookType;
-    try {
-      fetchedBook = await isbn.resolve(input.bookId);
-    } catch {
+    // Check if a review has already been made from that user on that book
+    if (
+      await BookReview.findOne({
+        where: { revieweeId: ctx.me.id, bookId: input.bookId },
+      })
+    ) {
       return {
         errors: [
           {
-            path: "isbn",
-            message: "Given ISBN doesn't match to any book",
+            path: "bookId",
+            message: "You have already reviewed that book",
           },
         ],
       };
     }
 
-    // Insert book into database
+    // Insert book into database if it's not already
     let book = await Book.findOne(input.bookId);
     if (!book) {
+      // Check if book with that ISBN exists
+      let fetchedBook: BookType;
+      try {
+        fetchedBook = await isbn.resolve(input.bookId);
+      } catch {
+        return {
+          errors: [
+            {
+              path: "isbn",
+              message: "Given ISBN doesn't match to any book",
+            },
+          ],
+        };
+      }
+
       try {
         book = await Book.create({
-          id: fetchedBook.industryIdentifiers[0],
+          id: input.bookId,
           title: fetchedBook.title,
           description: fetchedBook.description,
           publisher: fetchedBook.publisher,
@@ -139,22 +155,6 @@ export class BookReviewResolver {
           ],
         };
       }
-    }
-
-    // Check if a review has already been made from that user on that book
-    if (
-      await BookReview.findOne({
-        where: { revieweeId: ctx.me.id, bookId: book.id },
-      })
-    ) {
-      return {
-        errors: [
-          {
-            path: "bookId",
-            message: "You have already reviewed that book",
-          },
-        ],
-      };
     }
 
     const review = await BookReview.create({
