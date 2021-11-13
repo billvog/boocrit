@@ -1,0 +1,10 @@
+fragment PaginatedBookReviewsResponse on PaginatedBookReviewsResponse {
+  errors {
+		...FieldError
+	}
+	bookReviews {
+		...BookReview
+	}
+	hasMore
+	count
+}

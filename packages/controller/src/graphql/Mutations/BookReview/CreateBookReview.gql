@@ -1,0 +1,5 @@
+mutation CreateBookReview($input: CreateBookReviewInput!) {
+  CreateBookReview(input: $input) {
+    ...BookReviewResponse
+  }
+}

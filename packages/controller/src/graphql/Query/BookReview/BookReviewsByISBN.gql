@@ -1,0 +1,5 @@
+query BookReviews(pagination: PaginationInput!, input: BookReviewsByIsbnInput!) {
+	BookReviews(pagination: $pagination, input: $input) {
+		...PaginatedBookReviewsResponse
+	}
+}

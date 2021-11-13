@@ -1,0 +1,8 @@
+fragment BookReviewResponse on BookReviewResponse {
+	errors {
+		...FieldError
+	}
+	bookReview {
+		...BookReview
+	}
+}

@@ -1,0 +1,14 @@
+fragment Book on Book{
+	id
+  title
+  description
+  publisher
+  language
+  pageCount
+  publishedDate
+  categories
+  smallThumbnail
+  thumbnail
+  avgRate
+  createdAt
+}

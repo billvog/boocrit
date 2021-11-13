@@ -1,0 +1,5 @@
+query Books($pagination: PaginationInput!) {
+	Books(pagination: $pagination) {
+		...PaginatedBooksResponse
+	}
+}

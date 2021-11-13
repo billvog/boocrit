@@ -1,0 +1,11 @@
+fragment BookReview on BookReview {
+	id
+	revieweeId
+	reviewee {
+		...User
+	}
+	bookId
+	rate
+	body
+	createdAt
+}

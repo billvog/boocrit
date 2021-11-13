@@ -18,18 +18,20 @@ export type Scalars = {
 
 export type Book = {
   __typename?: 'Book';
-  authors: Array<Scalars['String']>;
+  avgRate: Scalars['Float'];
   categories: Array<Scalars['String']>;
-  description: Scalars['String'];
-  imageLinks?: Maybe<ImageListType>;
-  industryIdentifiers: Array<IndustryIdentifiersType>;
-  infoLink: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
   language: Scalars['String'];
-  pageCount: Scalars['Float'];
-  previewLink: Scalars['String'];
+  pageCount?: Maybe<Scalars['Int']>;
   publishedDate: Scalars['String'];
   publisher: Scalars['String'];
+  reviews: Array<BookReview>;
+  smallThumbnail?: Maybe<Scalars['String']>;
+  thumbnail?: Maybe<Scalars['String']>;
   title: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
 };
 
 export type BookReview = {
@@ -70,18 +72,6 @@ export type FieldError = {
   __typename?: 'FieldError';
   message: Scalars['String'];
   path: Scalars['String'];
-};
-
-export type ImageListType = {
-  __typename?: 'ImageListType';
-  smallThumbnail: Scalars['String'];
-  thumbnail: Scalars['String'];
-};
-
-export type IndustryIdentifiersType = {
-  __typename?: 'IndustryIdentifiersType';
-  identifier: Scalars['String'];
-  type: Scalars['String'];
 };
 
 export type Mutation = {
@@ -132,6 +122,14 @@ export type PaginatedBookReviewsResponse = {
   hasMore?: Maybe<Scalars['Boolean']>;
 };
 
+export type PaginatedBooksResponse = {
+  __typename?: 'PaginatedBooksResponse';
+  books?: Maybe<Array<Book>>;
+  count?: Maybe<Scalars['Int']>;
+  errors?: Maybe<Array<FieldError>>;
+  hasMore?: Maybe<Scalars['Boolean']>;
+};
+
 export type PaginationInput = {
   limit: Scalars['Int'];
   skip?: Maybe<Scalars['Int']>;
@@ -140,13 +138,19 @@ export type PaginationInput = {
 export type Query = {
   __typename?: 'Query';
   BookReviewsByISBN: PaginatedBookReviewsResponse;
-  Me: User;
+  Books: PaginatedBooksResponse;
+  Me?: Maybe<User>;
   hello: Scalars['String'];
 };
 
 
 export type QueryBookReviewsByIsbnArgs = {
   input: BookReviewsByIsbnInput;
+  pagination: PaginationInput;
+};
+
+
+export type QueryBooksArgs = {
   pagination: PaginationInput;
 };
 
@@ -191,13 +195,30 @@ export type UserResponse = {
   user?: Maybe<User>;
 };
 
+export type BookFragment = { __typename?: 'Book', id: string, title: string, description?: string | null | undefined, publisher: string, language: string, pageCount?: number | null | undefined, publishedDate: string, categories: Array<string>, smallThumbnail?: string | null | undefined, thumbnail?: string | null | undefined, avgRate: number, createdAt: any };
+
+export type BookReviewFragment = { __typename?: 'BookReview', id: string, revieweeId: string, bookId: string, rate: number, body: string, createdAt: any, reviewee: { __typename?: 'User', id: string, uid: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string } };
+
+export type BookReviewResponseFragment = { __typename?: 'BookReviewResponse', errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, bookReview?: { __typename?: 'BookReview', id: string, revieweeId: string, bookId: string, rate: number, body: string, createdAt: any, reviewee: { __typename?: 'User', id: string, uid: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string } } | null | undefined };
+
 export type FieldErrorFragment = { __typename?: 'FieldError', path: string, message: string };
 
 export type OkResponseFragment = { __typename?: 'OkResponse', ok: boolean };
 
+export type PaginatedBookReviewsResponseFragment = { __typename?: 'PaginatedBookReviewsResponse', hasMore?: boolean | null | undefined, count?: number | null | undefined, errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, bookReviews?: Array<{ __typename?: 'BookReview', id: string, revieweeId: string, bookId: string, rate: number, body: string, createdAt: any, reviewee: { __typename?: 'User', id: string, uid: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string } }> | null | undefined };
+
+export type PaginatedBooksResponseFragment = { __typename?: 'PaginatedBooksResponse', hasMore?: boolean | null | undefined, count?: number | null | undefined, errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, books?: Array<{ __typename?: 'Book', id: string, title: string, description?: string | null | undefined, publisher: string, language: string, pageCount?: number | null | undefined, publishedDate: string, categories: Array<string>, smallThumbnail?: string | null | undefined, thumbnail?: string | null | undefined, avgRate: number, createdAt: any }> | null | undefined };
+
 export type UserFragment = { __typename?: 'User', id: string, uid: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string };
 
 export type UserResponseFragment = { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: string, uid: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string } | null | undefined };
+
+export type CreateBookReviewMutationVariables = Exact<{
+  input: CreateBookReviewInput;
+}>;
+
+
+export type CreateBookReviewMutation = { __typename?: 'Mutation', CreateBookReview: { __typename?: 'BookReviewResponse', errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, bookReview?: { __typename?: 'BookReview', id: string, revieweeId: string, bookId: string, rate: number, body: string, createdAt: any, reviewee: { __typename?: 'User', id: string, uid: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string } } | null | undefined } };
 
 export type LoginUserMutationVariables = Exact<{
   credentials: CredentialsInput;
@@ -232,16 +253,18 @@ export type RegisterUser4MutationVariables = Exact<{
 
 export type RegisterUser4Mutation = { __typename?: 'Mutation', RegisterUser4: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: string, uid: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string } | null | undefined } };
 
+export type BooksQueryVariables = Exact<{
+  pagination: PaginationInput;
+}>;
+
+
+export type BooksQuery = { __typename?: 'Query', Books: { __typename?: 'PaginatedBooksResponse', hasMore?: boolean | null | undefined, count?: number | null | undefined, errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, books?: Array<{ __typename?: 'Book', id: string, title: string, description?: string | null | undefined, publisher: string, language: string, pageCount?: number | null | undefined, publishedDate: string, categories: Array<string>, smallThumbnail?: string | null | undefined, thumbnail?: string | null | undefined, avgRate: number, createdAt: any }> | null | undefined } };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', Me: { __typename?: 'User', id: string, uid: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string } };
+export type MeQuery = { __typename?: 'Query', Me?: { __typename?: 'User', id: string, uid: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string } | null | undefined };
 
-export const OkResponseFragmentDoc = gql`
-    fragment OkResponse on OkResponse {
-  ok
-}
-    `;
 export const FieldErrorFragmentDoc = gql`
     fragment FieldError on FieldError {
   path
@@ -259,6 +282,77 @@ export const UserFragmentDoc = gql`
   profileImage
 }
     `;
+export const BookReviewFragmentDoc = gql`
+    fragment BookReview on BookReview {
+  id
+  revieweeId
+  reviewee {
+    ...User
+  }
+  bookId
+  rate
+  body
+  createdAt
+}
+    ${UserFragmentDoc}`;
+export const BookReviewResponseFragmentDoc = gql`
+    fragment BookReviewResponse on BookReviewResponse {
+  errors {
+    ...FieldError
+  }
+  bookReview {
+    ...BookReview
+  }
+}
+    ${FieldErrorFragmentDoc}
+${BookReviewFragmentDoc}`;
+export const OkResponseFragmentDoc = gql`
+    fragment OkResponse on OkResponse {
+  ok
+}
+    `;
+export const PaginatedBookReviewsResponseFragmentDoc = gql`
+    fragment PaginatedBookReviewsResponse on PaginatedBookReviewsResponse {
+  errors {
+    ...FieldError
+  }
+  bookReviews {
+    ...BookReview
+  }
+  hasMore
+  count
+}
+    ${FieldErrorFragmentDoc}
+${BookReviewFragmentDoc}`;
+export const BookFragmentDoc = gql`
+    fragment Book on Book {
+  id
+  title
+  description
+  publisher
+  language
+  pageCount
+  publishedDate
+  categories
+  smallThumbnail
+  thumbnail
+  avgRate
+  createdAt
+}
+    `;
+export const PaginatedBooksResponseFragmentDoc = gql`
+    fragment PaginatedBooksResponse on PaginatedBooksResponse {
+  errors {
+    ...FieldError
+  }
+  books {
+    ...Book
+  }
+  hasMore
+  count
+}
+    ${FieldErrorFragmentDoc}
+${BookFragmentDoc}`;
 export const UserResponseFragmentDoc = gql`
     fragment UserResponse on UserResponse {
   errors {
@@ -270,6 +364,39 @@ export const UserResponseFragmentDoc = gql`
 }
     ${FieldErrorFragmentDoc}
 ${UserFragmentDoc}`;
+export const CreateBookReviewDocument = gql`
+    mutation CreateBookReview($input: CreateBookReviewInput!) {
+  CreateBookReview(input: $input) {
+    ...BookReviewResponse
+  }
+}
+    ${BookReviewResponseFragmentDoc}`;
+export type CreateBookReviewMutationFn = Apollo.MutationFunction<CreateBookReviewMutation, CreateBookReviewMutationVariables>;
+
+/**
+ * __useCreateBookReviewMutation__
+ *
+ * To run a mutation, you first call `useCreateBookReviewMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateBookReviewMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createBookReviewMutation, { data, loading, error }] = useCreateBookReviewMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateBookReviewMutation(baseOptions?: Apollo.MutationHookOptions<CreateBookReviewMutation, CreateBookReviewMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateBookReviewMutation, CreateBookReviewMutationVariables>(CreateBookReviewDocument, options);
+      }
+export type CreateBookReviewMutationHookResult = ReturnType<typeof useCreateBookReviewMutation>;
+export type CreateBookReviewMutationResult = Apollo.MutationResult<CreateBookReviewMutation>;
+export type CreateBookReviewMutationOptions = Apollo.BaseMutationOptions<CreateBookReviewMutation, CreateBookReviewMutationVariables>;
 export const LoginUserDocument = gql`
     mutation LoginUser($credentials: CredentialsInput!) {
   LoginUser(credentials: $credentials) {
@@ -434,6 +561,41 @@ export function useRegisterUser4Mutation(baseOptions?: Apollo.MutationHookOption
 export type RegisterUser4MutationHookResult = ReturnType<typeof useRegisterUser4Mutation>;
 export type RegisterUser4MutationResult = Apollo.MutationResult<RegisterUser4Mutation>;
 export type RegisterUser4MutationOptions = Apollo.BaseMutationOptions<RegisterUser4Mutation, RegisterUser4MutationVariables>;
+export const BooksDocument = gql`
+    query Books($pagination: PaginationInput!) {
+  Books(pagination: $pagination) {
+    ...PaginatedBooksResponse
+  }
+}
+    ${PaginatedBooksResponseFragmentDoc}`;
+
+/**
+ * __useBooksQuery__
+ *
+ * To run a query within a React component, call `useBooksQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBooksQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBooksQuery({
+ *   variables: {
+ *      pagination: // value for 'pagination'
+ *   },
+ * });
+ */
+export function useBooksQuery(baseOptions: Apollo.QueryHookOptions<BooksQuery, BooksQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<BooksQuery, BooksQueryVariables>(BooksDocument, options);
+      }
+export function useBooksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BooksQuery, BooksQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<BooksQuery, BooksQueryVariables>(BooksDocument, options);
+        }
+export type BooksQueryHookResult = ReturnType<typeof useBooksQuery>;
+export type BooksLazyQueryHookResult = ReturnType<typeof useBooksLazyQuery>;
+export type BooksQueryResult = Apollo.QueryResult<BooksQuery, BooksQueryVariables>;
 export const MeDocument = gql`
     query Me {
   Me {
