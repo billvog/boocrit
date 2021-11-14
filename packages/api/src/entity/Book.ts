@@ -60,8 +60,10 @@ export class Book extends BaseEntity {
   reviews: BookReview[];
 
   @Field(() => Float)
-  // @Column({ type: "float", default: -1 })
   avgRate: number;
+
+  @Field(() => Int)
+  numOfRates: number;
 
   @Field(() => Date)
   @CreateDateColumn()

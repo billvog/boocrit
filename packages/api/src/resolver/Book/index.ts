@@ -1,5 +1,13 @@
 import { Book } from "../../entity/Book";
-import { Arg, FieldResolver, Float, Query, Resolver, Root } from "type-graphql";
+import {
+  Arg,
+  FieldResolver,
+  Float,
+  Int,
+  Query,
+  Resolver,
+  Root,
+} from "type-graphql";
 import { PaginationInput } from "../PaginationInput";
 import { PaginatedBooksResponse } from "./BookResponse";
 import { getConnection } from "typeorm";
@@ -22,7 +30,13 @@ export class BookResolver {
     let rateSum = 0;
     reviews.map((r) => (rateSum += r.rate));
 
+    book.numOfRates = count;
     return (rateSum / count).toFixed(1);
+  }
+
+  @FieldResolver(() => Int)
+  async numOfRates(@Root() book: Book) {
+    return await BookReview.count({ where: { bookId: book.id } });
   }
 
   @Query(() => PaginatedBooksResponse)
