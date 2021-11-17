@@ -1,0 +1,5 @@
+query Book($options: BookInput!) {
+	Book(options: $options) {
+		...Book
+	}
+}

@@ -4,13 +4,19 @@ import { PaginationInput } from "../PaginationInput";
 import { PaginatedBooksResponse } from "./BookResponse";
 import { getConnection } from "typeorm";
 import { BookReview } from "../../entity/BookReview";
-import { BooksInput, BooksQueryOrderBy } from "./BookIinput";
+import { BookInput, BooksInput, BooksQueryOrderBy } from "./BookIinput";
 
 @Resolver(Book)
 export class BookResolver {
   @FieldResolver(() => Int)
   async numOfRates(@Root() book: Book) {
     return await BookReview.count({ where: { bookId: book.id } });
+  }
+
+  @Query(() => Book, { nullable: true })
+  async Book(@Arg("options") options: BookInput): Promise<Book | undefined> {
+    const book = await Book.findOne({ where: { id: options.isbn } });
+    return book;
   }
 
   @Query(() => PaginatedBooksResponse)

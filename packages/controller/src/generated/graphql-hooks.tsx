@@ -36,6 +36,10 @@ export type Book = {
   updatedAt: Scalars['DateTime'];
 };
 
+export type BookInput = {
+  isbn: Scalars['String'];
+};
+
 export type BookReview = {
   __typename?: 'BookReview';
   body: Scalars['String'];
@@ -148,10 +152,16 @@ export type PaginationInput = {
 
 export type Query = {
   __typename?: 'Query';
+  Book?: Maybe<Book>;
   BookReviewsByISBN: PaginatedBookReviewsResponse;
   Books: PaginatedBooksResponse;
   Me?: Maybe<User>;
   hello: Scalars['String'];
+};
+
+
+export type QueryBookArgs = {
+  options: BookInput;
 };
 
 
@@ -264,6 +274,13 @@ export type RegisterUser4MutationVariables = Exact<{
 
 
 export type RegisterUser4Mutation = { __typename?: 'Mutation', RegisterUser4: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, user?: { __typename?: 'User', id: string, uid: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string } | null | undefined } };
+
+export type BookQueryVariables = Exact<{
+  options: BookInput;
+}>;
+
+
+export type BookQuery = { __typename?: 'Query', Book?: { __typename?: 'Book', id: string, title: string, description?: string | null | undefined, publisher: string, language: string, pageCount?: number | null | undefined, publishedDate: string, categories: Array<string>, smallThumbnail?: string | null | undefined, thumbnail?: string | null | undefined, avgRate: number, numOfRates: number, createdAt: any } | null | undefined };
 
 export type BooksQueryVariables = Exact<{
   pagination: PaginationInput;
@@ -575,6 +592,41 @@ export function useRegisterUser4Mutation(baseOptions?: Apollo.MutationHookOption
 export type RegisterUser4MutationHookResult = ReturnType<typeof useRegisterUser4Mutation>;
 export type RegisterUser4MutationResult = Apollo.MutationResult<RegisterUser4Mutation>;
 export type RegisterUser4MutationOptions = Apollo.BaseMutationOptions<RegisterUser4Mutation, RegisterUser4MutationVariables>;
+export const BookDocument = gql`
+    query Book($options: BookInput!) {
+  Book(options: $options) {
+    ...Book
+  }
+}
+    ${BookFragmentDoc}`;
+
+/**
+ * __useBookQuery__
+ *
+ * To run a query within a React component, call `useBookQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBookQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBookQuery({
+ *   variables: {
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useBookQuery(baseOptions: Apollo.QueryHookOptions<BookQuery, BookQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<BookQuery, BookQueryVariables>(BookDocument, options);
+      }
+export function useBookLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BookQuery, BookQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<BookQuery, BookQueryVariables>(BookDocument, options);
+        }
+export type BookQueryHookResult = ReturnType<typeof useBookQuery>;
+export type BookLazyQueryHookResult = ReturnType<typeof useBookLazyQuery>;
+export type BookQueryResult = Apollo.QueryResult<BookQuery, BookQueryVariables>;
 export const BooksDocument = gql`
     query Books($pagination: PaginationInput!, $options: BooksInput!) {
   Books(pagination: $pagination, options: $options) {
