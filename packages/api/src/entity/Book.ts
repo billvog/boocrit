@@ -26,6 +26,10 @@ export class Book extends BaseEntity {
   @Column({ type: "text", nullable: true })
   description?: string;
 
+  @Field(() => [String])
+  @Column({ type: "text", array: true })
+  authors: string[];
+
   @Field()
   @Column()
   publisher: string;
@@ -60,6 +64,7 @@ export class Book extends BaseEntity {
   reviews: BookReview[];
 
   @Field(() => Float)
+  @Column({ type: "float", default: -1 })
   avgRate: number;
 
   @Field(() => Int)

@@ -1,4 +1,5 @@
 import { BookFragment } from "@boocrit/controller";
+import router from "next/router";
 import React from "react";
 import { RatingView } from "react-simple-star-rating";
 
@@ -7,36 +8,42 @@ interface BookProps {
 }
 
 export const Book: React.FC<BookProps> = ({ book }) => {
+  const openBook = () => {
+    router.push(`/book/${book.id}`);
+  };
+
   return (
-    <div
-      className="bg-accent border-4 border-accent-semidark rounded-3xl p-3.5 flex space-x-3.5"
-      style={{
-        width: 400,
-      }}
-    >
+    <div className="bg-accent group rounded-3xl p-3.5 pr-6 flex space-x-3.5">
       <div>
         <img
           src={book.thumbnail || book.smallThumbnail || ""}
           style={{ width: 64 }}
-          className="rounded-xl"
+          className="rounded-xl cursor-pointer"
+          onClick={openBook}
         />
       </div>
       <div className="flex-1 flex flex-col">
         <div className="leading-tight">
-          <div className="text-2xl text-secondary group-hover:text-secondary-hover font-black">
+          <div
+            className="text-2xl text-secondary group-hover:text-secondary-hover font-black cursor-pointer"
+            onClick={openBook}
+          >
             {book.title}
           </div>
-          <div className="text-secondary">
+          <div className="text-accent-darkest text-sm">
             from <span className="font-bold">{book.publisher}</span>
           </div>
         </div>
         <div className="mt-2 flex items-center space-x-2">
           <RatingView ratingValue={book.avgRate} stars={5} size={20} />
           <div
-            className="text-sm text-accent-darkest font-bold"
+            className="text-sm text-accent-darkest font-bold flex items-center space-x-2"
             style={{ transform: "translateY(-3px)" }}
           >
-            {book.avgRate} / 5 (x votes)
+            <span>{book.avgRate} / 5</span>
+            <span className="text-xs">
+              ({book.numOfRates.toLocaleString()} votes)
+            </span>
           </div>
         </div>
       </div>

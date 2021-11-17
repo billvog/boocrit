@@ -1,5 +1,5 @@
-query Books($pagination: PaginationInput!) {
-	Books(pagination: $pagination) {
+query Books($pagination: PaginationInput!, $options: BooksInput!) {
+	Books(pagination: $pagination, options: $options) {
 		...PaginatedBooksResponse
 	}
 }

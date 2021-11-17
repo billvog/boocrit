@@ -1,39 +1,13 @@
 import { Book } from "../../entity/Book";
-import {
-  Arg,
-  FieldResolver,
-  Float,
-  Int,
-  Query,
-  Resolver,
-  Root,
-} from "type-graphql";
+import { Arg, FieldResolver, Int, Query, Resolver, Root } from "type-graphql";
 import { PaginationInput } from "../PaginationInput";
 import { PaginatedBooksResponse } from "./BookResponse";
 import { getConnection } from "typeorm";
 import { BookReview } from "../../entity/BookReview";
+import { BooksInput, BooksQueryOrderBy } from "./BookIinput";
 
 @Resolver(Book)
 export class BookResolver {
-  @FieldResolver(() => Float)
-  async avgRate(@Root() book: Book) {
-    const qb = getConnection()
-      .getRepository(BookReview)
-      .createQueryBuilder("bookreview")
-      .where('bookreview."bookId" = :isbn', { isbn: book.id })
-      .select("bookreview.rate");
-
-    const [reviews, count] = await qb.getManyAndCount();
-
-    if (count <= 0) return -1;
-
-    let rateSum = 0;
-    reviews.map((r) => (rateSum += r.rate));
-
-    book.numOfRates = count;
-    return (rateSum / count).toFixed(1);
-  }
-
   @FieldResolver(() => Int)
   async numOfRates(@Root() book: Book) {
     return await BookReview.count({ where: { bookId: book.id } });
@@ -41,7 +15,8 @@ export class BookResolver {
 
   @Query(() => PaginatedBooksResponse)
   async Books(
-    @Arg("pagination") pagination: PaginationInput
+    @Arg("pagination") pagination: PaginationInput,
+    @Arg("options") options: BooksInput
   ): Promise<PaginatedBooksResponse> {
     const realLimit = Math.min(50, pagination.limit);
     const realLimitPlusOne = realLimit + 1;
@@ -51,6 +26,10 @@ export class BookResolver {
       .createQueryBuilder("book")
       .orderBy('book."createdAt"', "DESC")
       .limit(realLimitPlusOne);
+
+    if (options.orderBy == BooksQueryOrderBy.rating) {
+      qb.orderBy('book."avgRate"', "DESC");
+    }
 
     if (pagination.skip && pagination.skip > 0) {
       qb.offset(pagination.skip);

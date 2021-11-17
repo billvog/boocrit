@@ -18,12 +18,14 @@ export type Scalars = {
 
 export type Book = {
   __typename?: 'Book';
+  authors: Array<Scalars['String']>;
   avgRate: Scalars['Float'];
   categories: Array<Scalars['String']>;
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   language: Scalars['String'];
+  numOfRates: Scalars['Int'];
   pageCount?: Maybe<Scalars['Int']>;
   publishedDate: Scalars['String'];
   publisher: Scalars['String'];
@@ -55,6 +57,10 @@ export type BookReviewResponse = {
 
 export type BookReviewsByIsbnInput = {
   isbn: Scalars['String'];
+};
+
+export type BooksInput = {
+  orderBy: OrderBy;
 };
 
 export type CreateBookReviewInput = {
@@ -114,6 +120,11 @@ export type OkResponse = {
   ok: Scalars['Boolean'];
 };
 
+export enum OrderBy {
+  CreationDate = 'creationDate',
+  Rating = 'rating'
+}
+
 export type PaginatedBookReviewsResponse = {
   __typename?: 'PaginatedBookReviewsResponse';
   bookReviews?: Maybe<Array<BookReview>>;
@@ -151,6 +162,7 @@ export type QueryBookReviewsByIsbnArgs = {
 
 
 export type QueryBooksArgs = {
+  options: BooksInput;
   pagination: PaginationInput;
 };
 
@@ -195,7 +207,7 @@ export type UserResponse = {
   user?: Maybe<User>;
 };
 
-export type BookFragment = { __typename?: 'Book', id: string, title: string, description?: string | null | undefined, publisher: string, language: string, pageCount?: number | null | undefined, publishedDate: string, categories: Array<string>, smallThumbnail?: string | null | undefined, thumbnail?: string | null | undefined, avgRate: number, createdAt: any };
+export type BookFragment = { __typename?: 'Book', id: string, title: string, description?: string | null | undefined, publisher: string, language: string, pageCount?: number | null | undefined, publishedDate: string, categories: Array<string>, smallThumbnail?: string | null | undefined, thumbnail?: string | null | undefined, avgRate: number, numOfRates: number, createdAt: any };
 
 export type BookReviewFragment = { __typename?: 'BookReview', id: string, revieweeId: string, bookId: string, rate: number, body: string, createdAt: any, reviewee: { __typename?: 'User', id: string, uid: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string } };
 
@@ -207,7 +219,7 @@ export type OkResponseFragment = { __typename?: 'OkResponse', ok: boolean };
 
 export type PaginatedBookReviewsResponseFragment = { __typename?: 'PaginatedBookReviewsResponse', hasMore?: boolean | null | undefined, count?: number | null | undefined, errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, bookReviews?: Array<{ __typename?: 'BookReview', id: string, revieweeId: string, bookId: string, rate: number, body: string, createdAt: any, reviewee: { __typename?: 'User', id: string, uid: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string } }> | null | undefined };
 
-export type PaginatedBooksResponseFragment = { __typename?: 'PaginatedBooksResponse', hasMore?: boolean | null | undefined, count?: number | null | undefined, errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, books?: Array<{ __typename?: 'Book', id: string, title: string, description?: string | null | undefined, publisher: string, language: string, pageCount?: number | null | undefined, publishedDate: string, categories: Array<string>, smallThumbnail?: string | null | undefined, thumbnail?: string | null | undefined, avgRate: number, createdAt: any }> | null | undefined };
+export type PaginatedBooksResponseFragment = { __typename?: 'PaginatedBooksResponse', hasMore?: boolean | null | undefined, count?: number | null | undefined, errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, books?: Array<{ __typename?: 'Book', id: string, title: string, description?: string | null | undefined, publisher: string, language: string, pageCount?: number | null | undefined, publishedDate: string, categories: Array<string>, smallThumbnail?: string | null | undefined, thumbnail?: string | null | undefined, avgRate: number, numOfRates: number, createdAt: any }> | null | undefined };
 
 export type UserFragment = { __typename?: 'User', id: string, uid: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string };
 
@@ -255,10 +267,11 @@ export type RegisterUser4Mutation = { __typename?: 'Mutation', RegisterUser4: { 
 
 export type BooksQueryVariables = Exact<{
   pagination: PaginationInput;
+  options: BooksInput;
 }>;
 
 
-export type BooksQuery = { __typename?: 'Query', Books: { __typename?: 'PaginatedBooksResponse', hasMore?: boolean | null | undefined, count?: number | null | undefined, errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, books?: Array<{ __typename?: 'Book', id: string, title: string, description?: string | null | undefined, publisher: string, language: string, pageCount?: number | null | undefined, publishedDate: string, categories: Array<string>, smallThumbnail?: string | null | undefined, thumbnail?: string | null | undefined, avgRate: number, createdAt: any }> | null | undefined } };
+export type BooksQuery = { __typename?: 'Query', Books: { __typename?: 'PaginatedBooksResponse', hasMore?: boolean | null | undefined, count?: number | null | undefined, errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, books?: Array<{ __typename?: 'Book', id: string, title: string, description?: string | null | undefined, publisher: string, language: string, pageCount?: number | null | undefined, publishedDate: string, categories: Array<string>, smallThumbnail?: string | null | undefined, thumbnail?: string | null | undefined, avgRate: number, numOfRates: number, createdAt: any }> | null | undefined } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -337,6 +350,7 @@ export const BookFragmentDoc = gql`
   smallThumbnail
   thumbnail
   avgRate
+  numOfRates
   createdAt
 }
     `;
@@ -562,8 +576,8 @@ export type RegisterUser4MutationHookResult = ReturnType<typeof useRegisterUser4
 export type RegisterUser4MutationResult = Apollo.MutationResult<RegisterUser4Mutation>;
 export type RegisterUser4MutationOptions = Apollo.BaseMutationOptions<RegisterUser4Mutation, RegisterUser4MutationVariables>;
 export const BooksDocument = gql`
-    query Books($pagination: PaginationInput!) {
-  Books(pagination: $pagination) {
+    query Books($pagination: PaginationInput!, $options: BooksInput!) {
+  Books(pagination: $pagination, options: $options) {
     ...PaginatedBooksResponse
   }
 }
@@ -582,6 +596,7 @@ export const BooksDocument = gql`
  * const { data, loading, error } = useBooksQuery({
  *   variables: {
  *      pagination: // value for 'pagination'
+ *      options: // value for 'options'
  *   },
  * });
  */

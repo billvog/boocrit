@@ -18,7 +18,6 @@ export const Sidebar: React.FC<SidebarProps> = ({}) => {
       />
       <div className="flex flex-col space-y-1.5">
         <SidebarItem text="Home" route="/app" />
-        <SidebarItem text="Review" route="/app/review" />
       </div>
     </div>
   );

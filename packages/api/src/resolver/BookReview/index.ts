@@ -1,4 +1,4 @@
-import isbn from "node-isbn";
+import { FetchBookByISBN, FetchedBook } from "../../utils/BooksAPIClient";
 import {
   Arg,
   Ctx,
@@ -13,8 +13,8 @@ import { getConnection } from "typeorm";
 import { Book } from "../../entity/Book";
 import { BookReview } from "../../entity/BookReview";
 import { User } from "../../entity/User";
-import { BookType } from "../../type/BookType";
 import { MyContext } from "../../type/MyContext";
+import { UpdateBookAvgRate } from "../Book/BookUtils";
 import { PaginationInput } from "../PaginationInput";
 import { isAuthenticated } from "../User/isAuthMiddleware";
 import {
@@ -118,9 +118,9 @@ export class BookReviewResolver {
     let book = await Book.findOne(input.bookId);
     if (!book) {
       // Check if book with that ISBN exists
-      let fetchedBook: BookType;
+      let fetchedBook: FetchedBook;
       try {
-        fetchedBook = await isbn.resolve(input.bookId);
+        fetchedBook = await FetchBookByISBN(input.bookId);
       } catch {
         return {
           errors: [
@@ -135,15 +135,17 @@ export class BookReviewResolver {
       try {
         book = await Book.create({
           id: input.bookId,
-          title: fetchedBook.title,
-          description: fetchedBook.description,
-          publisher: fetchedBook.publisher,
-          language: fetchedBook.language,
-          pageCount: fetchedBook.pageCount,
-          publishedDate: fetchedBook.publishedDate,
-          categories: fetchedBook.categories,
-          smallThumbnail: fetchedBook.imageLinks?.smallThumbnail,
-          thumbnail: fetchedBook.imageLinks?.thumbnail,
+          title: fetchedBook.volumeInfo.title,
+          description: fetchedBook.volumeInfo.description,
+          authors: fetchedBook.volumeInfo.authors,
+          publisher: fetchedBook.volumeInfo.publisher,
+          language: fetchedBook.volumeInfo.language,
+          pageCount: fetchedBook.volumeInfo.pageCount,
+          publishedDate: fetchedBook.volumeInfo.publishedDate,
+          categories: fetchedBook.volumeInfo.categories,
+          smallThumbnail:
+            fetchedBook.volumeInfo.imageLinks?.smallThumbnail || undefined,
+          thumbnail: fetchedBook.volumeInfo.imageLinks?.thumbnail || undefined,
         }).save();
       } catch {
         return {
@@ -165,6 +167,9 @@ export class BookReviewResolver {
     });
 
     await review.save();
+
+    // After review is made update the average rate of the book (async)
+    UpdateBookAvgRate(review.bookId);
 
     return {
       bookReview: review,
