@@ -18,7 +18,7 @@ export const BookPage: React.FC<BookPageProps> = ({}) => {
       />
       <WaitAuth RequireLoggedIn>
         <MainLayout showLoading={BookLoading}>
-          <BookController book={BookData?.Book} />
+          <BookController book={BookData?.Book!} />
         </MainLayout>
       </WaitAuth>
     </>

@@ -12,6 +12,7 @@
     "@apollo/client": "^3.4.16",
     "@boocrit/controller": "0.0.1",
     "@headlessui/react": "^1.4.1",
+    "date-fns": "^2.26.0",
     "formik": "^2.2.9",
     "next": "11.1.2",
     "next-apollo": "^5.0.7",

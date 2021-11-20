@@ -2,10 +2,11 @@ fragment Book on Book{
 	id
   title
   description
+  authors
   publisher
+  publishedDate
   language
   pageCount
-  publishedDate
   categories
   smallThumbnail
   thumbnail

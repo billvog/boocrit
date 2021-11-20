@@ -217,7 +217,7 @@ export type UserResponse = {
   user?: Maybe<User>;
 };
 
-export type BookFragment = { __typename?: 'Book', id: string, title: string, description?: string | null | undefined, publisher: string, language: string, pageCount?: number | null | undefined, publishedDate: string, categories: Array<string>, smallThumbnail?: string | null | undefined, thumbnail?: string | null | undefined, avgRate: number, numOfRates: number, createdAt: any };
+export type BookFragment = { __typename?: 'Book', id: string, title: string, description?: string | null | undefined, authors: Array<string>, publisher: string, publishedDate: string, language: string, pageCount?: number | null | undefined, categories: Array<string>, smallThumbnail?: string | null | undefined, thumbnail?: string | null | undefined, avgRate: number, numOfRates: number, createdAt: any };
 
 export type BookReviewFragment = { __typename?: 'BookReview', id: string, revieweeId: string, bookId: string, rate: number, body: string, createdAt: any, reviewee: { __typename?: 'User', id: string, uid: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string } };
 
@@ -229,7 +229,7 @@ export type OkResponseFragment = { __typename?: 'OkResponse', ok: boolean };
 
 export type PaginatedBookReviewsResponseFragment = { __typename?: 'PaginatedBookReviewsResponse', hasMore?: boolean | null | undefined, count?: number | null | undefined, errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, bookReviews?: Array<{ __typename?: 'BookReview', id: string, revieweeId: string, bookId: string, rate: number, body: string, createdAt: any, reviewee: { __typename?: 'User', id: string, uid: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string } }> | null | undefined };
 
-export type PaginatedBooksResponseFragment = { __typename?: 'PaginatedBooksResponse', hasMore?: boolean | null | undefined, count?: number | null | undefined, errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, books?: Array<{ __typename?: 'Book', id: string, title: string, description?: string | null | undefined, publisher: string, language: string, pageCount?: number | null | undefined, publishedDate: string, categories: Array<string>, smallThumbnail?: string | null | undefined, thumbnail?: string | null | undefined, avgRate: number, numOfRates: number, createdAt: any }> | null | undefined };
+export type PaginatedBooksResponseFragment = { __typename?: 'PaginatedBooksResponse', hasMore?: boolean | null | undefined, count?: number | null | undefined, errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, books?: Array<{ __typename?: 'Book', id: string, title: string, description?: string | null | undefined, authors: Array<string>, publisher: string, publishedDate: string, language: string, pageCount?: number | null | undefined, categories: Array<string>, smallThumbnail?: string | null | undefined, thumbnail?: string | null | undefined, avgRate: number, numOfRates: number, createdAt: any }> | null | undefined };
 
 export type UserFragment = { __typename?: 'User', id: string, uid: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string };
 
@@ -280,7 +280,7 @@ export type BookQueryVariables = Exact<{
 }>;
 
 
-export type BookQuery = { __typename?: 'Query', Book?: { __typename?: 'Book', id: string, title: string, description?: string | null | undefined, publisher: string, language: string, pageCount?: number | null | undefined, publishedDate: string, categories: Array<string>, smallThumbnail?: string | null | undefined, thumbnail?: string | null | undefined, avgRate: number, numOfRates: number, createdAt: any } | null | undefined };
+export type BookQuery = { __typename?: 'Query', Book?: { __typename?: 'Book', id: string, title: string, description?: string | null | undefined, authors: Array<string>, publisher: string, publishedDate: string, language: string, pageCount?: number | null | undefined, categories: Array<string>, smallThumbnail?: string | null | undefined, thumbnail?: string | null | undefined, avgRate: number, numOfRates: number, createdAt: any } | null | undefined };
 
 export type BooksQueryVariables = Exact<{
   pagination: PaginationInput;
@@ -288,7 +288,15 @@ export type BooksQueryVariables = Exact<{
 }>;
 
 
-export type BooksQuery = { __typename?: 'Query', Books: { __typename?: 'PaginatedBooksResponse', hasMore?: boolean | null | undefined, count?: number | null | undefined, errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, books?: Array<{ __typename?: 'Book', id: string, title: string, description?: string | null | undefined, publisher: string, language: string, pageCount?: number | null | undefined, publishedDate: string, categories: Array<string>, smallThumbnail?: string | null | undefined, thumbnail?: string | null | undefined, avgRate: number, numOfRates: number, createdAt: any }> | null | undefined } };
+export type BooksQuery = { __typename?: 'Query', Books: { __typename?: 'PaginatedBooksResponse', hasMore?: boolean | null | undefined, count?: number | null | undefined, errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, books?: Array<{ __typename?: 'Book', id: string, title: string, description?: string | null | undefined, authors: Array<string>, publisher: string, publishedDate: string, language: string, pageCount?: number | null | undefined, categories: Array<string>, smallThumbnail?: string | null | undefined, thumbnail?: string | null | undefined, avgRate: number, numOfRates: number, createdAt: any }> | null | undefined } };
+
+export type BookReviewsByIsbnQueryVariables = Exact<{
+  pagination: PaginationInput;
+  input: BookReviewsByIsbnInput;
+}>;
+
+
+export type BookReviewsByIsbnQuery = { __typename?: 'Query', BookReviewsByISBN: { __typename?: 'PaginatedBookReviewsResponse', hasMore?: boolean | null | undefined, count?: number | null | undefined, errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, bookReviews?: Array<{ __typename?: 'BookReview', id: string, revieweeId: string, bookId: string, rate: number, body: string, createdAt: any, reviewee: { __typename?: 'User', id: string, uid: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string } }> | null | undefined } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -359,10 +367,11 @@ export const BookFragmentDoc = gql`
   id
   title
   description
+  authors
   publisher
+  publishedDate
   language
   pageCount
-  publishedDate
   categories
   smallThumbnail
   thumbnail
@@ -663,6 +672,42 @@ export function useBooksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Book
 export type BooksQueryHookResult = ReturnType<typeof useBooksQuery>;
 export type BooksLazyQueryHookResult = ReturnType<typeof useBooksLazyQuery>;
 export type BooksQueryResult = Apollo.QueryResult<BooksQuery, BooksQueryVariables>;
+export const BookReviewsByIsbnDocument = gql`
+    query BookReviewsByISBN($pagination: PaginationInput!, $input: BookReviewsByIsbnInput!) {
+  BookReviewsByISBN(pagination: $pagination, input: $input) {
+    ...PaginatedBookReviewsResponse
+  }
+}
+    ${PaginatedBookReviewsResponseFragmentDoc}`;
+
+/**
+ * __useBookReviewsByIsbnQuery__
+ *
+ * To run a query within a React component, call `useBookReviewsByIsbnQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBookReviewsByIsbnQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBookReviewsByIsbnQuery({
+ *   variables: {
+ *      pagination: // value for 'pagination'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useBookReviewsByIsbnQuery(baseOptions: Apollo.QueryHookOptions<BookReviewsByIsbnQuery, BookReviewsByIsbnQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<BookReviewsByIsbnQuery, BookReviewsByIsbnQueryVariables>(BookReviewsByIsbnDocument, options);
+      }
+export function useBookReviewsByIsbnLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BookReviewsByIsbnQuery, BookReviewsByIsbnQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<BookReviewsByIsbnQuery, BookReviewsByIsbnQueryVariables>(BookReviewsByIsbnDocument, options);
+        }
+export type BookReviewsByIsbnQueryHookResult = ReturnType<typeof useBookReviewsByIsbnQuery>;
+export type BookReviewsByIsbnLazyQueryHookResult = ReturnType<typeof useBookReviewsByIsbnLazyQuery>;
+export type BookReviewsByIsbnQueryResult = Apollo.QueryResult<BookReviewsByIsbnQuery, BookReviewsByIsbnQueryVariables>;
 export const MeDocument = gql`
     query Me {
   Me {
