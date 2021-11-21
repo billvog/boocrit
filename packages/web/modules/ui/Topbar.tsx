@@ -54,7 +54,7 @@ export const Topbar: React.FC<TopbarProps> = ({}) => {
                         }
 
                         await apolloClient.resetStore();
-                        router.replace("/");
+                        router.replace("/welcome");
                         res(true);
                       }),
                       {

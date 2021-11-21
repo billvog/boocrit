@@ -14,6 +14,8 @@ registerEnumType(BooksQueryOrderBy, {
 export class BooksInput {
   @Field(() => BooksQueryOrderBy)
   orderBy: BooksQueryOrderBy;
+  @Field(() => String, { nullable: true })
+  query?: string;
 }
 
 @InputType()

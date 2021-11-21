@@ -150,12 +150,14 @@ export class BookReviewResolver {
       }
 
       try {
+        console.log(fetchedBook);
+
         book = await Book.create({
           id: input.bookId,
           title: fetchedBook.volumeInfo.title,
           description: fetchedBook.volumeInfo.description,
           authors: fetchedBook.volumeInfo.authors,
-          publisher: fetchedBook.volumeInfo.publisher,
+          publisher: fetchedBook.volumeInfo.publisher || "",
           language: fetchedBook.volumeInfo.language,
           pageCount: fetchedBook.volumeInfo.pageCount,
           publishedDate: fetchedBook.volumeInfo.publishedDate,

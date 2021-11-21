@@ -30,7 +30,7 @@ export const BookController: React.FC<BookControllerProps> = ({ book }) => {
     });
 
   return (
-    <div className="px-6 py-2 pb-5 space-y-4">
+    <div className="body-container space-y-4">
       <div className="font-slab text-3xl text-secondary">
         <span className="font-black underline">{book.title}</span> on Boocrit
       </div>
@@ -117,31 +117,41 @@ export const BookController: React.FC<BookControllerProps> = ({ book }) => {
               </span>{" "}
               reviews
             </div>
-            <div className="space-y-4 mt-2">
-              {ReviewsData?.BookReviewsByISBN.bookReviews?.map((review) => (
-                <div key={`${review.id}:${review.bookId}`}>
-                  <BookReview bookReview={review} />
-                </div>
-              ))}
-              {ReviewsData?.BookReviewsByISBN.hasMore && (
+            <div className="mt-2">
+              {ReviewsData?.BookReviewsByISBN.bookReviews?.length == 0 ? (
                 <div>
-                  <MyButton
-                    isLoading={ReviewsLoading}
-                    onClick={() => {
-                      FetchMoreReviews({
-                        variables: {
-                          ...ReviewsQueryVariables,
-                          pagination: {
-                            ...ReviewsQueryVariables?.pagination,
-                            skip: ReviewsData.BookReviewsByISBN.bookReviews
-                              ?.length,
-                          },
-                        },
-                      });
-                    }}
-                  >
-                    Load more
-                  </MyButton>
+                  <div className="font-slab font-bold text-lg text-secondary">
+                    There are not reviews for this book
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {ReviewsData?.BookReviewsByISBN.bookReviews?.map((review) => (
+                    <div key={`${review.id}:${review.bookId}`}>
+                      <BookReview bookReview={review} />
+                    </div>
+                  ))}
+                  {ReviewsData?.BookReviewsByISBN.hasMore && (
+                    <div>
+                      <MyButton
+                        isLoading={ReviewsLoading}
+                        onClick={() => {
+                          FetchMoreReviews({
+                            variables: {
+                              ...ReviewsQueryVariables,
+                              pagination: {
+                                ...ReviewsQueryVariables?.pagination,
+                                skip: ReviewsData.BookReviewsByISBN.bookReviews
+                                  ?.length,
+                              },
+                            },
+                          });
+                        }}
+                      >
+                        Load more
+                      </MyButton>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

@@ -28,7 +28,7 @@ export const WaitAuth: React.FC<WaitAuthProps> = ({
 
     if (RequireLoggedIn) {
       if (!me) {
-        router.replace("/login?n=" + router.asPath);
+        router.replace("/welcome");
       } else if (me) {
         setOk(true);
       }
@@ -36,7 +36,7 @@ export const WaitAuth: React.FC<WaitAuthProps> = ({
 
     if (RequireNotLoggedIn) {
       if (me) {
-        router.replace("/app");
+        router.replace("/");
       } else if (!me) {
         setOk(true);
       }

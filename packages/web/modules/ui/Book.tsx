@@ -12,8 +12,12 @@ export const Book: React.FC<BookProps> = ({ book }) => {
     router.push(`/book/${book.id}`);
   };
 
+  const searchAuthor = (a: string) => {
+    router.push(`/search?author=${a}`);
+  };
+
   return (
-    <div className="bg-accent group rounded-3xl p-3.5 pr-6 flex space-x-3.5">
+    <div className="bg-accent rounded-3xl p-3.5 pr-6 flex space-x-3.5">
       <div>
         <img
           src={book.thumbnail || book.smallThumbnail || ""}
@@ -25,13 +29,23 @@ export const Book: React.FC<BookProps> = ({ book }) => {
       <div className="flex-1 flex flex-col">
         <div className="leading-tight">
           <div
-            className="text-2xl text-secondary group-hover:text-secondary-hover font-black cursor-pointer"
+            className="font-black text-2xl text-secondary hover:text-secondary-hover hover:underline cursor-pointer"
             onClick={openBook}
           >
             {book.title}
           </div>
           <div className="text-accent-darkest text-sm">
-            from <span className="font-bold">{book.authors.join(", ")}</span>
+            from{" "}
+            {book.authors
+              .map<React.ReactNode>((a) => (
+                <b
+                  className="hover:underline cursor-pointer"
+                  onClick={() => searchAuthor(a)}
+                >
+                  {a}
+                </b>
+              ))
+              .reduce((p, c) => [p, ", ", c])}
           </div>
         </div>
         <div className="mt-2 flex items-center space-x-2">

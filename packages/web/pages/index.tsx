@@ -1,2 +1,2 @@
-import { LandingPage } from "../modules/Landing/LandingPage";
-export default LandingPage;
+import { HomePage } from "../modules/Home/HomePage";
+export default HomePage;

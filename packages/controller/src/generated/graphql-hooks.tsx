@@ -65,6 +65,7 @@ export type BookReviewsByIsbnInput = {
 
 export type BooksInput = {
   orderBy: OrderBy;
+  query?: Maybe<Scalars['String']>;
 };
 
 export type CreateBookReviewInput = {

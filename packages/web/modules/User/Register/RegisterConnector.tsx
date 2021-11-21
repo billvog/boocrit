@@ -9,7 +9,7 @@ export const RegisterConnector: React.FC<RegisterConnectorProps> = ({}) => {
   const router = useRouter();
 
   const finished = () => {
-    router.push("/app");
+    router.push("/");
   };
 
   return (

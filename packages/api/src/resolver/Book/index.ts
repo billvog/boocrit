@@ -37,6 +37,19 @@ export class BookResolver {
       qb.orderBy('book."avgRate"', "DESC");
     }
 
+    if (!!options.query) {
+      qb.where(
+        `book.id = :exactQuery or 
+        lower(book.title) like lower(:likeQuery) or 
+        lower(array_to_string(book.authors, ',')) like lower(:likeQuery) or 
+        lower(array_to_string(book.categories, ',')) like lower(:likeQuery)`,
+        {
+          exactQuery: options.query,
+          likeQuery: `%${options.query}%`,
+        }
+      );
+    }
+
     if (pagination.skip && pagination.skip > 0) {
       qb.offset(pagination.skip);
     }

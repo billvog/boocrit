@@ -8,7 +8,7 @@ export const LoginConnector: React.FC<LoginConnectorProps> = ({}) => {
   const router = useRouter();
 
   const finished = () => {
-    router.push(typeof router.query.n === "string" ? router.query.n : "/app");
+    router.push("/");
   };
 
   return (

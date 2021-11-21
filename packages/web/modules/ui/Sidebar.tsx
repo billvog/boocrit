@@ -20,7 +20,8 @@ export const Sidebar: React.FC<SidebarProps> = ({}) => {
         style={{ height: 3 }}
       />
       <div className="flex flex-col space-y-1.5">
-        <SidebarItem text="Home" route="/app" />
+        <SidebarItem text="Home" route="/" />
+        <SidebarItem text="Search" route="/search" />
       </div>
     </div>
   );

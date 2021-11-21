@@ -4,7 +4,7 @@ import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
 
 interface MainLayoutProps {
-  showLoading: boolean;
+  showLoading?: boolean;
 }
 
 export const MainLayout: React.FC<MainLayoutProps> = ({

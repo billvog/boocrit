@@ -9,6 +9,10 @@
   .break-word {
     word-break: break-word;
   }
+
+  .body-container {
+    padding: 24px;
+  }
 }
 
 html,

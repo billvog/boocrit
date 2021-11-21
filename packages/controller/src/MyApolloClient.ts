@@ -1,5 +1,8 @@
 import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
-import { PaginatedBookReviewsResponse } from "src";
+import {
+  PaginatedBookReviewsResponse,
+  PaginatedBooksResponse,
+} from "./generated/graphql-hooks";
 
 export const MyApolloClient = (ApiBaseUrl: string, AuthCookie: string) => {
   return new ApolloClient({
@@ -16,6 +19,24 @@ export const MyApolloClient = (ApiBaseUrl: string, AuthCookie: string) => {
           fields: {
             MyBookReviewByISBN: {
               keyArgs: ["input"],
+            },
+            Books: {
+              keyArgs: ["options"],
+              merge(
+                existing: PaginatedBooksResponse | undefined,
+                incoming: PaginatedBooksResponse
+              ): PaginatedBooksResponse {
+                console.log(existing);
+                console.log(incoming);
+
+                return {
+                  ...incoming,
+                  books: [
+                    ...(existing?.books || []),
+                    ...(incoming?.books || []),
+                  ],
+                };
+              },
             },
             BookReviewsByISBN: {
               keyArgs: false,
