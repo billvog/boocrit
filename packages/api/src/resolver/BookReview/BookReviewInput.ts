@@ -19,6 +19,13 @@ export class CreateBookReviewInput {
 }
 
 @InputType()
+export class MyBookReviewByIsbnInput {
+  @Field()
+  @IsISBN("13", { message: "Given ISBN identifier is not valid" })
+  isbn: string;
+}
+
+@InputType()
 export class BookReviewsByIsbnInput {
   @Field()
   @IsISBN("13", { message: "Given ISBN identifier is not valid" })

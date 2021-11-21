@@ -1,4 +1,8 @@
-import { BookFragment, useBookReviewsByIsbnQuery } from "@boocrit/controller";
+import {
+  BookFragment,
+  useBookReviewsByIsbnQuery,
+  useMyBookReviewByIsbnQuery,
+} from "@boocrit/controller";
 import React from "react";
 import { RatingView } from "react-simple-star-rating";
 import { BookReview } from "../ui/BookReview";
@@ -17,8 +21,13 @@ export const BookController: React.FC<BookControllerProps> = ({ book }) => {
     variables: ReviewsQueryVariables,
   } = useBookReviewsByIsbnQuery({
     notifyOnNetworkStatusChange: true,
-    variables: { input: { isbn: book.id }, pagination: { limit: 1 } },
+    variables: { input: { isbn: book.id }, pagination: { limit: 5 } },
   });
+
+  const { data: MyReviewData, loading: MyReviewLoading } =
+    useMyBookReviewByIsbnQuery({
+      variables: { input: { isbn: book.id } },
+    });
 
   return (
     <div className="px-6 py-2 space-y-4">
@@ -82,14 +91,26 @@ export const BookController: React.FC<BookControllerProps> = ({ book }) => {
           <div className="font-slab font-bold text-2xl text-brown">
             About it
           </div>
-          <div className="text-secondary">{book.description}</div>
+          <div className="text-secondary font-medium">{book.description}</div>
         </div>
       )}
       <div>
-        {ReviewsLoading && !ReviewsData ? (
+        {(ReviewsLoading && !ReviewsData) || MyReviewLoading ? (
           <MySpinner />
         ) : (
           <>
+            {MyReviewData?.MyBookReviewByISBN.bookReview ? (
+              <div className="mb-4">
+                <div className="font-slab font-bold text-2xl text-brown mb-2">
+                  Your review
+                </div>
+                <BookReview
+                  bookReview={MyReviewData?.MyBookReviewByISBN.bookReview}
+                />
+              </div>
+            ) : (
+              <div>you haven't reviewed</div>
+            )}
             <div className="font-slab text-2xl text-brown">
               <span className="font-black">
                 {ReviewsData?.BookReviewsByISBN.count}

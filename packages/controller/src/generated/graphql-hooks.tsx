@@ -119,6 +119,10 @@ export type MutationRegisterUser4Args = {
   options: RegisterInput4;
 };
 
+export type MyBookReviewByIsbnInput = {
+  isbn: Scalars['String'];
+};
+
 export type OkResponse = {
   __typename?: 'OkResponse';
   ok: Scalars['Boolean'];
@@ -156,6 +160,7 @@ export type Query = {
   BookReviewsByISBN: PaginatedBookReviewsResponse;
   Books: PaginatedBooksResponse;
   Me?: Maybe<User>;
+  MyBookReviewByISBN: BookReviewResponse;
   hello: Scalars['String'];
 };
 
@@ -174,6 +179,11 @@ export type QueryBookReviewsByIsbnArgs = {
 export type QueryBooksArgs = {
   options: BooksInput;
   pagination: PaginationInput;
+};
+
+
+export type QueryMyBookReviewByIsbnArgs = {
+  input: MyBookReviewByIsbnInput;
 };
 
 export type RegisterInput1 = {
@@ -297,6 +307,13 @@ export type BookReviewsByIsbnQueryVariables = Exact<{
 
 
 export type BookReviewsByIsbnQuery = { __typename?: 'Query', BookReviewsByISBN: { __typename?: 'PaginatedBookReviewsResponse', hasMore?: boolean | null | undefined, count?: number | null | undefined, errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, bookReviews?: Array<{ __typename?: 'BookReview', id: string, revieweeId: string, bookId: string, rate: number, body: string, createdAt: any, reviewee: { __typename?: 'User', id: string, uid: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string } }> | null | undefined } };
+
+export type MyBookReviewByIsbnQueryVariables = Exact<{
+  input: MyBookReviewByIsbnInput;
+}>;
+
+
+export type MyBookReviewByIsbnQuery = { __typename?: 'Query', MyBookReviewByISBN: { __typename?: 'BookReviewResponse', errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, bookReview?: { __typename?: 'BookReview', id: string, revieweeId: string, bookId: string, rate: number, body: string, createdAt: any, reviewee: { __typename?: 'User', id: string, uid: string, fullName: string, firstName: string, lastName: string, email: string, profileImage: string } } | null | undefined } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -708,6 +725,41 @@ export function useBookReviewsByIsbnLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type BookReviewsByIsbnQueryHookResult = ReturnType<typeof useBookReviewsByIsbnQuery>;
 export type BookReviewsByIsbnLazyQueryHookResult = ReturnType<typeof useBookReviewsByIsbnLazyQuery>;
 export type BookReviewsByIsbnQueryResult = Apollo.QueryResult<BookReviewsByIsbnQuery, BookReviewsByIsbnQueryVariables>;
+export const MyBookReviewByIsbnDocument = gql`
+    query MyBookReviewByISBN($input: MyBookReviewByIsbnInput!) {
+  MyBookReviewByISBN(input: $input) {
+    ...BookReviewResponse
+  }
+}
+    ${BookReviewResponseFragmentDoc}`;
+
+/**
+ * __useMyBookReviewByIsbnQuery__
+ *
+ * To run a query within a React component, call `useMyBookReviewByIsbnQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMyBookReviewByIsbnQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMyBookReviewByIsbnQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useMyBookReviewByIsbnQuery(baseOptions: Apollo.QueryHookOptions<MyBookReviewByIsbnQuery, MyBookReviewByIsbnQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MyBookReviewByIsbnQuery, MyBookReviewByIsbnQueryVariables>(MyBookReviewByIsbnDocument, options);
+      }
+export function useMyBookReviewByIsbnLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MyBookReviewByIsbnQuery, MyBookReviewByIsbnQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MyBookReviewByIsbnQuery, MyBookReviewByIsbnQueryVariables>(MyBookReviewByIsbnDocument, options);
+        }
+export type MyBookReviewByIsbnQueryHookResult = ReturnType<typeof useMyBookReviewByIsbnQuery>;
+export type MyBookReviewByIsbnLazyQueryHookResult = ReturnType<typeof useMyBookReviewByIsbnLazyQuery>;
+export type MyBookReviewByIsbnQueryResult = Apollo.QueryResult<MyBookReviewByIsbnQuery, MyBookReviewByIsbnQueryVariables>;
 export const MeDocument = gql`
     query Me {
   Me {

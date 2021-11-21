@@ -1,0 +1,5 @@
+query MyBookReviewByISBN($input: MyBookReviewByIsbnInput!) {
+	MyBookReviewByISBN(input: $input) {
+		...BookReviewResponse
+	}
+}

@@ -20,6 +20,7 @@ import { isAuthenticated } from "../User/isAuthMiddleware";
 import {
   BookReviewsByIsbnInput,
   CreateBookReviewInput,
+  MyBookReviewByIsbnInput,
 } from "./BookReviewInput";
 import {
   BookReviewResponse,
@@ -52,10 +53,25 @@ export class BookReviewResolver {
     }
   }
 
+  @Query(() => BookReviewResponse)
+  async MyBookReviewByISBN(
+    @Arg("input") input: MyBookReviewByIsbnInput
+  ): Promise<BookReviewResponse> {
+    const bookReview = await BookReview.findOne({
+      where: { bookId: input.isbn },
+    });
+
+    return {
+      bookReview,
+    };
+  }
+
   @Query(() => PaginatedBookReviewsResponse)
+  @UseMiddleware(isAuthenticated)
   async BookReviewsByISBN(
     @Arg("input") input: BookReviewsByIsbnInput,
-    @Arg("pagination") pagination: PaginationInput
+    @Arg("pagination") pagination: PaginationInput,
+    @Ctx() ctx: MyContext
   ): Promise<PaginatedBookReviewsResponse> {
     // Check if book with that ISBN exists
     const book = await Book.findOne(input.isbn);
@@ -77,8 +93,9 @@ export class BookReviewResolver {
       .getRepository(BookReview)
       .createQueryBuilder("bookreview")
       .orderBy('bookreview."createdAt"', "DESC")
-      .limit(realLimitPlusOne)
-      .where('bookreview."bookId" = :bookId', { bookId: input.isbn });
+      .where('bookreview."revieweeId" != :userId', { userId: ctx.me.id })
+      .andWhere('bookreview."bookId" = :bookId', { bookId: input.isbn })
+      .limit(realLimitPlusOne);
 
     if (pagination.skip && pagination.skip > 0) {
       qb.offset(pagination.skip);

@@ -14,8 +14,11 @@ export const MyApolloClient = (ApiBaseUrl: string, AuthCookie: string) => {
       typePolicies: {
         Query: {
           fields: {
+            MyBookReviewByISBN: {
+              keyArgs: ["input"],
+            },
             BookReviewsByISBN: {
-              keyArgs: ["input", "pagination"],
+              keyArgs: false,
               merge(
                 existing: PaginatedBookReviewsResponse | undefined,
                 incoming: PaginatedBookReviewsResponse
