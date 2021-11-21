@@ -5,7 +5,10 @@ interface SidebarProps {}
 
 export const Sidebar: React.FC<SidebarProps> = ({}) => {
   return (
-    <div className="bg-accent flex flex-col space-y-6" style={{ width: 290 }}>
+    <div
+      className="bg-accent flex flex-col space-y-6 sticky top-0"
+      style={{ width: 290 }}
+    >
       <div className="px-6 pt-5 flex items-center space-x-6 select-none">
         <img src="/favicon.ico" style={{ width: 52 }} />
         <div className="font-slab font-bold text-3xl text-secondary">

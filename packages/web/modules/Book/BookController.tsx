@@ -30,7 +30,7 @@ export const BookController: React.FC<BookControllerProps> = ({ book }) => {
     });
 
   return (
-    <div className="px-6 py-2 space-y-4">
+    <div className="px-6 py-2 pb-5 space-y-4">
       <div className="font-slab text-3xl text-secondary">
         <span className="font-black underline">{book.title}</span> on Boocrit
       </div>

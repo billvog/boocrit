@@ -12,11 +12,11 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
   showLoading = false,
 }) => {
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen overflow-hidden">
       <Sidebar />
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col relative overflow-y-auto">
         <Topbar />
-        <div className="flex-1 mt-20 font-roboto">
+        <div className="flex-1 font-roboto">
           {showLoading ? <MyCenterSpinner /> : children}
         </div>
       </div>

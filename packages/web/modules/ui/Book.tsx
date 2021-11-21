@@ -31,7 +31,7 @@ export const Book: React.FC<BookProps> = ({ book }) => {
             {book.title}
           </div>
           <div className="text-accent-darkest text-sm">
-            from <span className="font-bold">{book.publisher}</span>
+            from <span className="font-bold">{book.authors.join(", ")}</span>
           </div>
         </div>
         <div className="mt-2 flex items-center space-x-2">
