@@ -2,6 +2,7 @@ import { BookFragment } from "@boocrit/controller";
 import router from "next/router";
 import React from "react";
 import { RatingView } from "react-simple-star-rating";
+import { getBookCover } from "../../utils/getBookCover";
 
 interface BookProps {
   book: BookFragment;
@@ -20,7 +21,7 @@ export const Book: React.FC<BookProps> = ({ book }) => {
     <div className="bg-accent rounded-3xl p-3.5 pr-6 flex space-x-3.5">
       <div>
         <img
-          src={book.thumbnail || book.smallThumbnail || ""}
+          src={getBookCover(book)}
           style={{ width: 64 }}
           className="rounded-xl cursor-pointer"
           onClick={openBook}

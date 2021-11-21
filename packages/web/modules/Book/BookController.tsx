@@ -5,6 +5,7 @@ import {
 } from "@boocrit/controller";
 import React from "react";
 import { RatingView } from "react-simple-star-rating";
+import { getBookCover } from "../../utils/getBookCover";
 import { BookReview } from "../ui/BookReview";
 import { MyButton } from "../ui/MyButton";
 import { MySpinner } from "../ui/MySpinner";
@@ -37,8 +38,8 @@ export const BookController: React.FC<BookControllerProps> = ({ book }) => {
       <div className="flex space-x-4">
         <div>
           <img
-            src={book.thumbnail || book.smallThumbnail || ""}
-            className="rounded-2xl"
+            src={getBookCover(book)}
+            className="rounded-3xl"
             style={{ width: 118 }}
           />
         </div>
