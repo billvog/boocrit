@@ -1,4 +1,4 @@
-import { IsISBN } from "class-validator";
+import { IsISBN, Length } from "class-validator";
 import { InputType, Field, registerEnumType } from "type-graphql";
 
 export enum BooksQueryOrderBy {
@@ -23,4 +23,11 @@ export class BookInput {
   @Field(() => String)
   @IsISBN(undefined, { message: "Given ISBN in invalid" })
   isbn: string;
+}
+
+@InputType()
+export class BooksFromApiInput {
+  @Field(() => String)
+  @Length(3, 255, { message: "Length must be between 3 and 255" })
+  query: string;
 }

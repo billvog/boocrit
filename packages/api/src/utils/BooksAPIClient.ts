@@ -1,6 +1,7 @@
 import axios from "axios";
+import { Book } from "../entity/Book";
 
-const BooksAPIURL = `https://www.googleapis.com/books/v1/volumes?key=${process.env.GOOGLE_BOOKS_API_KEY}&`;
+const BooksAPIURL = `https://www.googleapis.com/books/v1/volumes?key=${process.env.GOOGLE_BOOKS_API_KEY}`;
 
 export type FetchedBook = {
   volumeInfo: {
@@ -20,6 +21,12 @@ export type FetchedBook = {
       smallThumbnail: string;
       thumbnail: string;
     };
+    industryIdentifiers: [
+      {
+        type: string;
+        identifier: string;
+      }
+    ];
   };
 };
 
@@ -28,12 +35,38 @@ type FetchBookResponse = {
   items: FetchedBook[];
 };
 
-export const FetchBookByISBN = async (isbn: string) => {
-  const respone = await axios.get<FetchBookResponse>(
-    BooksAPIURL + "q=isbn:" + isbn
+export const FetchedBookToBookEntiry = (book: FetchedBook) => {
+  let isbn: string = "-";
+  book.volumeInfo.industryIdentifiers.map((id) =>
+    id.type === "ISBN_13" ? (isbn = id.identifier) : null
   );
 
-  return respone.data.items[0];
+  return Book.create({
+    id: isbn,
+    title: book.volumeInfo.title,
+    description: book.volumeInfo.description || undefined,
+    authors: book.volumeInfo.authors || [],
+    publisher: book.volumeInfo.publisher || "",
+    language: book.volumeInfo.language || undefined,
+    pageCount: book.volumeInfo.pageCount || undefined,
+    publishedDate: book.volumeInfo.publishedDate || "",
+    categories: book.volumeInfo.categories || [],
+    smallThumbnail: book.volumeInfo.imageLinks?.smallThumbnail || undefined,
+    thumbnail: book.volumeInfo.imageLinks?.thumbnail || undefined,
+    avgRate: -1,
+    numOfRates: -1,
+    createdAt: new Date(book.volumeInfo.publishedDate || 0),
+    updatedAt: new Date(book.volumeInfo.publishedDate || 0),
+    reviews: undefined,
+  });
+};
+
+export const FetchBookByISBN = async (isbn: string) => {
+  const response = await axios.get<FetchBookResponse>(
+    BooksAPIURL + "&q=isbn:" + isbn
+  );
+
+  return response.data.items[0];
 };
 
 export const FetchedBookWithParams = async (
@@ -42,9 +75,11 @@ export const FetchedBookWithParams = async (
   startIndex: number = 0,
   maxResults: number = 10
 ) => {
+  console.log(encodeURI(value));
+
   const respone = await axios.get<FetchBookResponse>(
-    `${BooksAPIURL}q=${
-      key != "" ? `${key}=${value}` : value
+    `${BooksAPIURL}&q=${
+      key != "" ? `${key}=${encodeURI(value)}` : encodeURI(value)
     }&startIndex=${startIndex}&maxResults=${maxResults}`
   );
 

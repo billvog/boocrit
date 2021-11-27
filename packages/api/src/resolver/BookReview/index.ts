@@ -1,4 +1,8 @@
-import { FetchBookByISBN, FetchedBook } from "../../utils/BooksAPIClient";
+import {
+  FetchBookByISBN,
+  FetchedBook,
+  FetchedBookToBookEntiry,
+} from "../../utils/BooksAPIClient";
 import {
   Arg,
   Ctx,
@@ -150,21 +154,9 @@ export class BookReviewResolver {
       }
 
       try {
-        console.log(fetchedBook);
-
         book = await Book.create({
+          ...FetchedBookToBookEntiry(fetchedBook),
           id: input.bookId,
-          title: fetchedBook.volumeInfo.title,
-          description: fetchedBook.volumeInfo.description,
-          authors: fetchedBook.volumeInfo.authors,
-          publisher: fetchedBook.volumeInfo.publisher || "",
-          language: fetchedBook.volumeInfo.language,
-          pageCount: fetchedBook.volumeInfo.pageCount,
-          publishedDate: fetchedBook.volumeInfo.publishedDate,
-          categories: fetchedBook.volumeInfo.categories,
-          smallThumbnail:
-            fetchedBook.volumeInfo.imageLinks?.smallThumbnail || undefined,
-          thumbnail: fetchedBook.volumeInfo.imageLinks?.thumbnail || undefined,
         }).save();
       } catch {
         return {

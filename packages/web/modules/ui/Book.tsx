@@ -1,8 +1,7 @@
-import { BookFragment } from "@boocrit/controller";
+import { BookFragment, useGetBookCover } from "@boocrit/controller";
 import router from "next/router";
 import React from "react";
 import { RatingView } from "react-simple-star-rating";
-import { getBookCover } from "../../utils/getBookCover";
 
 interface BookProps {
   book: BookFragment;
@@ -21,7 +20,7 @@ export const Book: React.FC<BookProps> = ({ book }) => {
     <div className="bg-accent rounded-3xl p-3.5 pr-6 flex space-x-3.5">
       <div>
         <img
-          src={getBookCover(book)}
+          src={useGetBookCover(book)}
           style={{ width: 64 }}
           className="rounded-xl cursor-pointer"
           onClick={openBook}
@@ -37,16 +36,20 @@ export const Book: React.FC<BookProps> = ({ book }) => {
           </div>
           <div className="text-accent-darkest text-sm">
             from{" "}
-            {book.authors
-              .map<React.ReactNode>((a) => (
-                <b
-                  className="hover:underline cursor-pointer"
-                  onClick={() => searchAuthor(a)}
-                >
-                  {a}
-                </b>
-              ))
-              .reduce((p, c) => [p, ", ", c])}
+            {book.authors.length > 0 ? (
+              book.authors
+                .map<React.ReactNode>((a) => (
+                  <b
+                    className="hover:underline cursor-pointer"
+                    onClick={() => searchAuthor(a)}
+                  >
+                    {a}
+                  </b>
+                ))
+                .reduce((p, c) => [p, ", ", c])
+            ) : (
+              <b>Unknown</b>
+            )}
           </div>
         </div>
         <div className="mt-2 flex items-center space-x-2">
@@ -55,10 +58,12 @@ export const Book: React.FC<BookProps> = ({ book }) => {
             className="text-sm text-accent-darkest font-bold flex items-center space-x-2"
             style={{ transform: "translateY(-3px)" }}
           >
-            <span>{book.avgRate} / 5</span>
-            <span className="text-xs">
-              ({book.numOfRates.toLocaleString()} votes)
-            </span>
+            <span>{book.avgRate == -1 ? "-" : book.avgRate} / 5</span>
+            {book.avgRate != -1 && (
+              <span className="text-xs">
+                ({book.numOfRates.toLocaleString()} votes)
+              </span>
+            )}
           </div>
         </div>
       </div>

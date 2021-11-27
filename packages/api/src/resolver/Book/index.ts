@@ -1,10 +1,28 @@
-import { Book } from "../../entity/Book";
-import { Arg, FieldResolver, Int, Query, Resolver, Root } from "type-graphql";
-import { PaginationInput } from "../PaginationInput";
-import { PaginatedBooksResponse } from "./BookResponse";
+import {
+  Arg,
+  FieldResolver,
+  Int,
+  Query,
+  Resolver,
+  Root,
+  UseMiddleware,
+} from "type-graphql";
 import { getConnection } from "typeorm";
+import { Book } from "../../entity/Book";
 import { BookReview } from "../../entity/BookReview";
-import { BookInput, BooksInput, BooksQueryOrderBy } from "./BookIinput";
+import {
+  FetchedBookToBookEntiry,
+  FetchedBookWithParams,
+} from "../../utils/BooksAPIClient";
+import { PaginationInput } from "../PaginationInput";
+import { isAuthenticated } from "../User/isAuthMiddleware";
+import {
+  BookInput,
+  BooksFromApiInput,
+  BooksInput,
+  BooksQueryOrderBy,
+} from "./BookIinput";
+import { PaginatedBooksResponse } from "./BookResponse";
 
 @Resolver(Book)
 export class BookResolver {
@@ -59,6 +77,22 @@ export class BookResolver {
       books: books.slice(0, realLimit),
       hasMore: books.length === realLimitPlusOne,
       count,
+    };
+  }
+
+  @Query(() => PaginatedBooksResponse)
+  @UseMiddleware(isAuthenticated)
+  async BooksFromAPI(
+    @Arg("options") options: BooksFromApiInput
+  ): Promise<PaginatedBooksResponse> {
+    const response = await FetchedBookWithParams("", options.query, 0, 5);
+
+    let books: Book[] = [];
+    response.items.map((b) => books.push(FetchedBookToBookEntiry(b)));
+
+    return {
+      books,
+      count: response.totalItems,
     };
   }
 }

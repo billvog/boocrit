@@ -1,11 +1,11 @@
 import {
   BookFragment,
   useBookReviewsByIsbnQuery,
+  useGetBookCover,
   useMyBookReviewByIsbnQuery,
 } from "@boocrit/controller";
 import React from "react";
 import { RatingView } from "react-simple-star-rating";
-import { getBookCover } from "../../utils/getBookCover";
 import { BookReview } from "../ui/BookReview";
 import { MyButton } from "../ui/MyButton";
 import { MySpinner } from "../ui/MySpinner";
@@ -38,7 +38,7 @@ export const BookController: React.FC<BookControllerProps> = ({ book }) => {
       <div className="flex space-x-4">
         <div>
           <img
-            src={getBookCover(book)}
+            src={useGetBookCover(book)}
             className="rounded-3xl"
             style={{ width: 118 }}
           />

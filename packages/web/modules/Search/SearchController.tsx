@@ -121,6 +121,16 @@ export const SearchController: React.FC<SearchControllerProps> = ({}) => {
                     </MyButton>
                   </div>
                 )}
+                <div className="font-slab font-bold text-bae text-gray-500 w-full text-left">
+                  Not found what you were looking for?{" "}
+                  <span
+                    className="font-black underline cursor-pointer text-secondary"
+                    onClick={openAddBookEntry}
+                  >
+                    Add a new entry
+                  </span>
+                  .
+                </div>
               </div>
             )}
           </>

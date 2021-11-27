@@ -1,0 +1,5 @@
+query BooksFromAPI($options: BooksFromApiInput!) {
+	BooksFromAPI(options: $options) {
+		...PaginatedBooksResponse
+	}
+}

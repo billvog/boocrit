@@ -63,6 +63,10 @@ export type BookReviewsByIsbnInput = {
   isbn: Scalars['String'];
 };
 
+export type BooksFromApiInput = {
+  query: Scalars['String'];
+};
+
 export type BooksInput = {
   orderBy: OrderBy;
   query?: Maybe<Scalars['String']>;
@@ -160,6 +164,7 @@ export type Query = {
   Book?: Maybe<Book>;
   BookReviewsByISBN: PaginatedBookReviewsResponse;
   Books: PaginatedBooksResponse;
+  BooksFromAPI: PaginatedBooksResponse;
   Me?: Maybe<User>;
   MyBookReviewByISBN: BookReviewResponse;
   hello: Scalars['String'];
@@ -180,6 +185,11 @@ export type QueryBookReviewsByIsbnArgs = {
 export type QueryBooksArgs = {
   options: BooksInput;
   pagination: PaginationInput;
+};
+
+
+export type QueryBooksFromApiArgs = {
+  options: BooksFromApiInput;
 };
 
 
@@ -300,6 +310,13 @@ export type BooksQueryVariables = Exact<{
 
 
 export type BooksQuery = { __typename?: 'Query', Books: { __typename?: 'PaginatedBooksResponse', hasMore?: boolean | null | undefined, count?: number | null | undefined, errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, books?: Array<{ __typename?: 'Book', id: string, title: string, description?: string | null | undefined, authors: Array<string>, publisher: string, publishedDate: string, language: string, pageCount?: number | null | undefined, categories: Array<string>, smallThumbnail?: string | null | undefined, thumbnail?: string | null | undefined, avgRate: number, numOfRates: number, createdAt: any }> | null | undefined } };
+
+export type BooksFromApiQueryVariables = Exact<{
+  options: BooksFromApiInput;
+}>;
+
+
+export type BooksFromApiQuery = { __typename?: 'Query', BooksFromAPI: { __typename?: 'PaginatedBooksResponse', hasMore?: boolean | null | undefined, count?: number | null | undefined, errors?: Array<{ __typename?: 'FieldError', path: string, message: string }> | null | undefined, books?: Array<{ __typename?: 'Book', id: string, title: string, description?: string | null | undefined, authors: Array<string>, publisher: string, publishedDate: string, language: string, pageCount?: number | null | undefined, categories: Array<string>, smallThumbnail?: string | null | undefined, thumbnail?: string | null | undefined, avgRate: number, numOfRates: number, createdAt: any }> | null | undefined } };
 
 export type BookReviewsByIsbnQueryVariables = Exact<{
   pagination: PaginationInput;
@@ -690,6 +707,41 @@ export function useBooksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Book
 export type BooksQueryHookResult = ReturnType<typeof useBooksQuery>;
 export type BooksLazyQueryHookResult = ReturnType<typeof useBooksLazyQuery>;
 export type BooksQueryResult = Apollo.QueryResult<BooksQuery, BooksQueryVariables>;
+export const BooksFromApiDocument = gql`
+    query BooksFromAPI($options: BooksFromApiInput!) {
+  BooksFromAPI(options: $options) {
+    ...PaginatedBooksResponse
+  }
+}
+    ${PaginatedBooksResponseFragmentDoc}`;
+
+/**
+ * __useBooksFromApiQuery__
+ *
+ * To run a query within a React component, call `useBooksFromApiQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBooksFromApiQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBooksFromApiQuery({
+ *   variables: {
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useBooksFromApiQuery(baseOptions: Apollo.QueryHookOptions<BooksFromApiQuery, BooksFromApiQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<BooksFromApiQuery, BooksFromApiQueryVariables>(BooksFromApiDocument, options);
+      }
+export function useBooksFromApiLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BooksFromApiQuery, BooksFromApiQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<BooksFromApiQuery, BooksFromApiQueryVariables>(BooksFromApiDocument, options);
+        }
+export type BooksFromApiQueryHookResult = ReturnType<typeof useBooksFromApiQuery>;
+export type BooksFromApiLazyQueryHookResult = ReturnType<typeof useBooksFromApiLazyQuery>;
+export type BooksFromApiQueryResult = Apollo.QueryResult<BooksFromApiQuery, BooksFromApiQueryVariables>;
 export const BookReviewsByIsbnDocument = gql`
     query BookReviewsByISBN($pagination: PaginationInput!, $input: BookReviewsByIsbnInput!) {
   BookReviewsByISBN(pagination: $pagination, input: $input) {
