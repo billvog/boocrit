@@ -22,7 +22,7 @@ export const Book: React.FC<BookProps> = ({
     : () => {};
 
   const searchAuthor = (a: string) => {
-    router.push(`/search?author=${a}`);
+    router.push(`/search?q=${a}`);
   };
 
   return (

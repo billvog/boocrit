@@ -39,7 +39,7 @@ export const MyApolloClient = (ApiBaseUrl: string, AuthCookie: string) => {
               },
             },
             BookReviewsByISBN: {
-              keyArgs: false,
+              keyArgs: ["pagination", "input"],
               merge(
                 existing: PaginatedBookReviewsResponse | undefined,
                 incoming: PaginatedBookReviewsResponse

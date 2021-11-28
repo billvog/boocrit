@@ -1,9 +1,9 @@
 import {
-  ErrorMap,
   Register1ValidationSchema,
   Register2ValidationSchema,
   Register3ValidationSchema,
   Register4ValidationSchema,
+  RegisterControllerChildrenProps,
   RegisterFormValues,
   RegisterPhase,
 } from "@boocrit/controller";
@@ -15,13 +15,7 @@ import { Phase2 } from "./Phases/Phase2";
 import { Phase3 } from "./Phases/Phase3";
 import { Phase4 } from "./Phases/Phase4";
 
-interface RegisterViewProps {
-  submit: (values: RegisterFormValues) => Promise<ErrorMap | null>;
-  goBack: () => void;
-  phase: RegisterPhase;
-  formInitialValues: RegisterFormValues | undefined;
-}
-
+interface RegisterViewProps extends RegisterControllerChildrenProps {}
 const C: React.FC<RegisterViewProps & FormikProps<RegisterFormValues>> = ({
   isSubmitting,
   goBack,

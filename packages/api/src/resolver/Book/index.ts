@@ -103,10 +103,11 @@ export class BookResolver {
     }
 
     let books: Book[] = [];
-    if (response.totalItems > 0) {
+    if (response.totalItems > 0 && typeof response.items !== "undefined") {
       await Promise.all(
         response.items.map(async (b) => {
           if (
+            b.volumeInfo.industryIdentifiers &&
             b.volumeInfo.industryIdentifiers[0].type === "OTHER" &&
             typeof b.id === "string"
           ) {

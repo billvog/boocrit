@@ -27,15 +27,17 @@ export interface RegisterFormValues {
   code: string;
 }
 
+export interface RegisterControllerChildrenProps {
+  isLoading: boolean;
+  submit: (values: RegisterFormValues) => Promise<ErrorMap | null>;
+  goBack: () => void;
+  phase: RegisterPhase;
+  formInitialValues: RegisterFormValues | undefined;
+}
+
 interface RegisterControllerProps {
   onFinish: () => any;
-  children: (data: {
-    isLoading: boolean;
-    submit: (values: RegisterFormValues) => Promise<ErrorMap | null>;
-    goBack: () => void;
-    phase: RegisterPhase;
-    formInitialValues: RegisterFormValues | undefined;
-  }) => JSX.Element | null;
+  children: (data: RegisterControllerChildrenProps) => JSX.Element | null;
 }
 
 export const RegisterController: React.FC<RegisterControllerProps> = ({
