@@ -11,7 +11,9 @@ import { getConnection } from "typeorm";
 import { Book } from "../../entity/Book";
 import { BookReview } from "../../entity/BookReview";
 import {
-  FetchedBookToBookEntiry,
+  FetchBookById,
+  FetchBookResponse,
+  FetchedBookToBookEntity,
   FetchedBookWithParams,
 } from "../../utils/BooksAPIClient";
 import { PaginationInput } from "../PaginationInput";
@@ -23,6 +25,7 @@ import {
   BooksQueryOrderBy,
 } from "./BookIinput";
 import { PaginatedBooksResponse } from "./BookResponse";
+import IsbnUtils from "isbn-utils";
 
 @Resolver(Book)
 export class BookResolver {
@@ -85,10 +88,36 @@ export class BookResolver {
   async BooksFromAPI(
     @Arg("options") options: BooksFromApiInput
   ): Promise<PaginatedBooksResponse> {
-    const response = await FetchedBookWithParams("", options.query, 0, 5);
+    let response: FetchBookResponse;
+
+    const queryIsbn = IsbnUtils.parse(options.query);
+    if (queryIsbn && queryIsbn.isValid()) {
+      response = await FetchedBookWithParams(
+        "isbn",
+        queryIsbn.asIsbn13(),
+        0,
+        1
+      );
+    } else {
+      response = await FetchedBookWithParams("", options.query, 0, 5);
+    }
 
     let books: Book[] = [];
-    response.items.map((b) => books.push(FetchedBookToBookEntiry(b)));
+    if (response.totalItems > 0) {
+      await Promise.all(
+        response.items.map(async (b) => {
+          if (
+            b.volumeInfo.industryIdentifiers[0].type === "OTHER" &&
+            typeof b.id === "string"
+          ) {
+            const newbook = await FetchBookById(b.id);
+            books.push(FetchedBookToBookEntity(newbook));
+          } else {
+            books.push(FetchedBookToBookEntity(b));
+          }
+        })
+      );
+    }
 
     return {
       books,

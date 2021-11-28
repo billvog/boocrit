@@ -1,9 +1,11 @@
 import axios from "axios";
 import { Book } from "../entity/Book";
 
-const BooksAPIURL = `https://www.googleapis.com/books/v1/volumes?key=${process.env.GOOGLE_BOOKS_API_KEY}`;
+const BooksAPIURL = `https://www.googleapis.com/books/v1/volumes`;
+const ApiKeyParam = `key=${process.env.GOOGLE_BOOKS_API_KEY}`;
 
 export type FetchedBook = {
+  id: string;
   volumeInfo: {
     title: string;
     description?: string;
@@ -30,12 +32,12 @@ export type FetchedBook = {
   };
 };
 
-type FetchBookResponse = {
+export type FetchBookResponse = {
   totalItems: number;
   items: FetchedBook[];
 };
 
-export const FetchedBookToBookEntiry = (book: FetchedBook) => {
+export const FetchedBookToBookEntity = (book: FetchedBook) => {
   let isbn: string = "-";
   book.volumeInfo.industryIdentifiers.map((id) =>
     id.type === "ISBN_13" ? (isbn = id.identifier) : null
@@ -63,25 +65,30 @@ export const FetchedBookToBookEntiry = (book: FetchedBook) => {
 
 export const FetchBookByISBN = async (isbn: string) => {
   const response = await axios.get<FetchBookResponse>(
-    BooksAPIURL + "&q=isbn:" + isbn
+    BooksAPIURL + `?${ApiKeyParam}&q=isbn:` + isbn
   );
 
   return response.data.items[0];
 };
 
+export const FetchBookById = async (id: string) => {
+  const response = await axios.get<FetchedBook>(
+    BooksAPIURL + "/" + id + `?${ApiKeyParam}`
+  );
+  return response.data;
+};
+
 export const FetchedBookWithParams = async (
-  key: ":intitle" | ":inauthor" | ":inpublisher" | "",
+  key: "isbn" | "intitle" | "inauthor" | "inpublisher" | "",
   value: string,
   startIndex: number = 0,
   maxResults: number = 10
 ) => {
-  console.log(encodeURI(value));
-
-  const respone = await axios.get<FetchBookResponse>(
-    `${BooksAPIURL}&q=${
-      key != "" ? `${key}=${encodeURI(value)}` : encodeURI(value)
+  const response = await axios.get<FetchBookResponse>(
+    `${BooksAPIURL}?${ApiKeyParam}&q=${
+      key != "" ? `${key}:${encodeURI(value)}` : encodeURI(value)
     }&startIndex=${startIndex}&maxResults=${maxResults}`
   );
 
-  return respone.data;
+  return response.data;
 };

@@ -1,7 +1,7 @@
 import {
   FetchBookByISBN,
   FetchedBook,
-  FetchedBookToBookEntiry,
+  FetchedBookToBookEntity,
 } from "../../utils/BooksAPIClient";
 import {
   Arg,
@@ -155,7 +155,7 @@ export class BookReviewResolver {
 
       try {
         book = await Book.create({
-          ...FetchedBookToBookEntiry(fetchedBook),
+          ...FetchedBookToBookEntity(fetchedBook),
           id: input.bookId,
         }).save();
       } catch {

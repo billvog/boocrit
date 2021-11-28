@@ -11,17 +11,20 @@ export interface AddBookFormValues {
   query: string;
 }
 
+export interface AddBookControllerChildrenProps {
+  submit: (values: AddBookFormValues) => Promise<ErrorMap | null>;
+  chooseBook: (bookId: string) => void;
+  goBack: () => void;
+  phase: AddBookPhase;
+  books: {
+    queryCalled: boolean;
+    loading: boolean;
+    data?: BookFragment[];
+  };
+}
+
 interface AddBookControllerProps {
-  children: (data: {
-    submit: (values: AddBookFormValues) => Promise<ErrorMap | null>;
-    chooseBook: (bookId: string) => void;
-    goBack: () => void;
-    phase: AddBookPhase;
-    books: {
-      loading: boolean;
-      data?: BookFragment[];
-    };
-  }) => JSX.Element | null;
+  children: (data: AddBookControllerChildrenProps) => JSX.Element | null;
 }
 
 export const AddBookController: React.FC<AddBookControllerProps> = ({
@@ -30,8 +33,10 @@ export const AddBookController: React.FC<AddBookControllerProps> = ({
   const [phase, setPhase] = useState<AddBookPhase>(1);
   const [book, setBook] = useState<BookFragment | undefined>();
 
-  const [searchBooks, { data: BooksData, loading: BooksLoading }] =
-    useBooksFromApiLazyQuery();
+  const [
+    searchBooks,
+    { called: BooksQueryCalled, data: BooksData, loading: BooksLoading },
+  ] = useBooksFromApiLazyQuery();
 
   const submit = async (values: AddBookFormValues) => {
     if (phase === 1) {
@@ -64,6 +69,7 @@ export const AddBookController: React.FC<AddBookControllerProps> = ({
     goBack,
     phase,
     books: {
+      queryCalled: BooksQueryCalled,
       loading: BooksLoading,
       data: BooksData?.BooksFromAPI.books as BookFragment[],
     },

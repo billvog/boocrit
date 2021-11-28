@@ -5,12 +5,21 @@ import { RatingView } from "react-simple-star-rating";
 
 interface BookProps {
   book: BookFragment;
+  onClick?: () => any;
+  clickable?: boolean;
 }
 
-export const Book: React.FC<BookProps> = ({ book }) => {
-  const openBook = () => {
-    router.push(`/book/${book.id}`);
-  };
+export const Book: React.FC<BookProps> = ({
+  book,
+  onClick,
+  clickable = true,
+}) => {
+  const openBook = () => router.push(`/book/${book.id}`);
+  const bookClicked = clickable
+    ? typeof onClick === "function"
+      ? onClick
+      : openBook
+    : () => {};
 
   const searchAuthor = (a: string) => {
     router.push(`/search?author=${a}`);
@@ -22,15 +31,19 @@ export const Book: React.FC<BookProps> = ({ book }) => {
         <img
           src={useGetBookCover(book)}
           style={{ width: 64 }}
-          className="rounded-xl cursor-pointer"
-          onClick={openBook}
+          className={`rounded-xl ${clickable ? "cursor-pointer" : ""}`}
+          onClick={bookClicked}
         />
       </div>
       <div className="flex-1 flex flex-col">
         <div className="leading-tight">
           <div
-            className="font-black text-2xl text-secondary hover:text-secondary-hover hover:underline cursor-pointer"
-            onClick={openBook}
+            className={`font-black text-2xl text-secondary ${
+              clickable
+                ? "hover:text-secondary-hover hover:underline cursor-pointer"
+                : ""
+            }`}
+            onClick={bookClicked}
           >
             {book.title}
           </div>
