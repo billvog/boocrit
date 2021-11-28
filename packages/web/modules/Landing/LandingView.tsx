@@ -60,7 +60,7 @@ export const LandingView: React.FC = ({}) => {
             <>
               <p>
                 Boocrit doesn’t depend on any physical library, so you can find
-                ANY book that has an ISBN and read reviews about it. You won’t
+                ANY book that has an ISBN and is registered on Google Books and read reviews about it. You won’t
                 have to worry about our library not being up to date.
               </p>
               <p>
